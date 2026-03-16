@@ -11,12 +11,12 @@
             theme: {
                 extend: {
                     colors: {
-                        dark: '#050505',
-                        darker: '#000000',
+                        dark: '#fafafa',
+                        darker: '#ffffff',
                         primary: '#6366f1', // Indigo/Purple accent
                         secondary: '#8b5cf6',
-                        glass: 'rgba(255, 255, 255, 0.05)',
-                        glassBorder: 'rgba(255, 255, 255, 0.1)',
+                        glass: 'rgba(0, 0, 0, 0.05)',
+                        glassBorder: 'rgba(0, 0, 0, 0.1)',
                     },
                     fontFamily: {
                         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
@@ -32,7 +32,17 @@
     <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.font.im/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
+
+        /* === Motion Design Tokens === */
+        :root {
+            --motion-fast: 160ms;
+            --motion-base: 320ms;
+            --motion-slow: 700ms;
+            --motion-cinematic: 1200ms;
+            --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
         html {
             scroll-behavior: smooth;
             overflow-x: clip;
@@ -40,8 +50,8 @@
         }
 
         body {
-            background-color: #050505;
-            color: #ffffff;
+            background-color: #fafafa;
+            color: #0a0a0a;
             font-family: 'Inter', sans-serif;
             overflow-x: clip;
         }
@@ -50,38 +60,38 @@
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #050505;
+            background: #fafafa;
         }
         ::-webkit-scrollbar-thumb {
-            background: #333;
+            background: #ccc;
             border-radius: 4px;
         }
 
         .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(0, 0, 0, 0.03);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
         }
 
         .glass-button {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            background: linear-gradient(135deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.03) 100%);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.18);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(0,0,0,0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
         }
 
         .glass-button:hover {
-            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%);
-            border: 1px solid rgba(255,255,255,0.25);
+            background: linear-gradient(135deg, rgba(0,0,0,0.12) 0%, rgba(0,0,0,0.06) 100%);
+            border: 1px solid rgba(0,0,0,0.2);
             transform: translateY(-2px);
             box-shadow: 0 12px 40px 0 rgba(99, 102, 241, 0.2);
         }
 
         .text-gradient {
-            background: linear-gradient(to right, #fff, #a5b4fc);
+            background: linear-gradient(to right, #111, #4338ca);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -230,8 +240,8 @@
 
         .glow-btn {
             position: relative;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.12);
             transition: all 0.4s ease;
         }
         .glow-btn::before {
@@ -259,22 +269,162 @@
             50% { background-position: 100% 50%; }
         }
 
-        /* Scroll-progress driven animations (JS controls opacity + transform) */
-        [data-scroll] {
-            will-change: transform, opacity;
-        }
-
-        /* Hero load-in animation */
+        /* === Hero Cinematic Entrance (JS-triggered) === */
         .hero-reveal {
             opacity: 0;
-            transform: translateY(30px);
-            animation: heroReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transform: translateY(28px);
+        }
+        h1.hero-reveal {
+            clip-path: inset(0 0 100% 0);
+        }
+        .hero-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity var(--motion-cinematic) var(--ease-emphasis),
+                        transform var(--motion-cinematic) var(--ease-emphasis);
+        }
+        h1.hero-reveal.revealed {
+            clip-path: inset(0 0 0% 0);
+            transition: opacity var(--motion-cinematic) var(--ease-emphasis),
+                        transform var(--motion-cinematic) var(--ease-emphasis),
+                        clip-path var(--motion-cinematic) var(--ease-emphasis);
         }
 
-        @keyframes heroReveal {
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        /* === Hero Glow Ambient Drift === */
+        @keyframes glowPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+        .hero-glow-drift {
+            animation: glowPulse 6s ease-in-out infinite;
+        }
+
+        /* === Header States === */
+        .header-entrance {
+            animation: headerSlideIn var(--motion-slow) var(--ease-emphasis) forwards;
+        }
+        @keyframes headerSlideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        #header {
+            transition: box-shadow var(--motion-base) var(--ease-standard),
+                        background-color var(--motion-base) var(--ease-standard);
+        }
+        #header.header-scrolled {
+            box-shadow: 0 1px 16px rgba(0, 0, 0, 0.06);
+            background: rgba(250, 250, 250, 0.92);
+        }
+
+        /* === Mac Screen Cross-fade === */
+        .mac-screen {
+            transition: opacity 600ms var(--ease-standard) !important;
+        }
+
+        /* === Mac Overlay Choreography === */
+        .mac-overlay {
+            transform: translateY(12px);
+            transition: opacity 500ms var(--ease-emphasis),
+                        transform 500ms var(--ease-emphasis) !important;
+        }
+        .mac-overlay.overlay-visible {
+            opacity: 1 !important;
+            transform: translateY(0);
+        }
+        .mac-overlay h3,
+        .mac-overlay p {
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 400ms var(--ease-emphasis),
+                        transform 400ms var(--ease-emphasis);
+        }
+        .mac-overlay p {
+            transition-delay: 70ms;
+        }
+        .mac-overlay.overlay-visible h3,
+        .mac-overlay.overlay-visible p {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* === Feature Card Interactions === */
+        .feature-card {
+            transition: transform var(--motion-base) var(--ease-standard),
+                        box-shadow var(--motion-base) var(--ease-standard),
+                        background-color 0.3s ease !important;
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        }
+        @keyframes iconPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.18); }
+            100% { transform: scale(1); }
+        }
+
+        /* === CTA Premium Button === */
+        .cta-btn-premium {
+            position: relative;
+            overflow: hidden;
+            transition: transform var(--motion-base) var(--ease-standard),
+                        box-shadow var(--motion-base) var(--ease-standard);
+        }
+        .cta-btn-premium::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left 600ms var(--ease-emphasis);
+            pointer-events: none;
+        }
+        .cta-btn-premium:hover::after {
+            left: 130%;
+        }
+        .cta-btn-premium:active {
+            transform: scale(0.98) !important;
+            transition-duration: 100ms;
+        }
+
+        /* === CTA Gradient Backdrop === */
+        @keyframes gradientBreathe {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .cta-backdrop {
+            background: linear-gradient(135deg,
+                rgba(99, 102, 241, 0.05),
+                rgba(139, 92, 246, 0.07),
+                rgba(59, 130, 246, 0.05),
+                rgba(168, 85, 247, 0.04)) !important;
+            background-size: 300% 300% !important;
+            animation: gradientBreathe 10s ease-in-out infinite;
+        }
+
+        /* === Link Polish === */
+        footer a {
+            transition: color var(--motion-fast) var(--ease-standard);
+        }
+
+        /* === Reduced Motion === */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 200ms !important;
+                transition-delay: 0ms !important;
+            }
+            .hero-reveal, [data-scroll] {
+                clip-path: none !important;
+            }
+            .hero-glow-drift, .cta-backdrop {
+                animation: none !important;
+            }
+            .cta-btn-premium::after {
+                display: none;
             }
         }
     </style>
@@ -286,29 +436,29 @@
     <div class="glow-bg top-[40%] right-[-200px] bg-opacity-50" style="background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, rgba(0,0,0,0) 70%);"></div>
 
     <!-- Header / Navigation -->
-    <header id="header" class="fixed top-0 w-full z-50 glass-panel border-t-0 border-l-0 border-r-0 border-b border-glassBorder">
+    <header id="header" class="header-entrance fixed top-0 w-full z-50 glass-panel border-t-0 border-l-0 border-r-0 border-b border-glassBorder">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center">
-                <img src="flowvoicedark.png" alt="FlowVoice 流声" class="w-52">
+                <img src="flowvoicedark.png" alt="FlowVoice 流声" class="w-52" style="filter: brightness(0);">
             </div>
             
             <nav class="hidden md:flex items-center gap-6">
-                <a href="#" class="text-sm text-gray-300 hover:text-white transition-colors duration-200">登录</a>
-                <a href="#" class="text-sm px-5 py-2 rounded-full bg-white text-black font-medium hover:bg-gray-200 transition-colors duration-200">注册</a>
+                <a href="#" class="text-sm text-gray-600 hover:text-black transition-colors duration-200">登录</a>
+                <a href="#" class="text-sm px-5 py-2 rounded-full bg-black text-white font-medium hover:bg-gray-800 transition-colors duration-200">注册</a>
             </nav>
             
             <!-- Mobile Menu Button -->
             <div class="md:hidden flex items-center gap-2">
-                <a href="#" class="text-xs px-4 py-2 rounded-full bg-white text-black font-medium">注册</a>
-                <button id="mobile-menu-button" class="text-gray-300 p-2 focus:outline-none" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <a href="#" class="text-xs px-4 py-2 rounded-full bg-black text-white font-medium">注册</a>
+                <button id="mobile-menu-button" class="text-gray-600 p-2 focus:outline-none" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
                     <i class="fa-solid fa-bars text-xl"></i>
                 </button>
             </div>
         </div>
         <!-- Mobile Navigation Dropdown -->
         <div id="mobile-menu" class="hidden md:hidden bg-dark border-b border-glassBorder px-4 py-6 space-y-4 transition-all duration-300 ease-in-out">
-            <a href="#" class="block text-gray-300 hover:text-white">登录</a>
-            <a href="#" class="block text-gray-300 hover:text-white">下载 Mac 版</a>
+            <a href="#" class="block text-gray-600 hover:text-black">登录</a>
+            <a href="#" class="block text-gray-600 hover:text-black">下载 Mac 版</a>
         </div>
     </header>
 
@@ -316,35 +466,41 @@
     <main style="overflow-x: clip;">
         <!-- Hero Section -->
         <section id="hero-section" class="relative min-h-screen flex flex-col justify-center items-center pt-48 pb-12" style="overflow-x: clip;">
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[400px] bg-purple-600/20 blur-[120px] rounded-full pointer-events-none"></div>
+            <div class="hero-glow absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[400px] bg-purple-600/20 blur-[120px] rounded-full pointer-events-none"></div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col items-center">
                 <div class="text-center max-w-5xl mx-auto">
-                    <h1 class="hero-reveal text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 md:mb-8 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400" style="animation-delay: 0.1s; text-align: center; line-height: 1.2;">
+                    <h1 class="hero-reveal text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 md:mb-8 bg-clip-text text-transparent bg-gradient-to-r from-black via-gray-800 to-gray-600" style="text-align: center; line-height: 1.2;">
                         流声 – 随声而动<br class="hidden md:block">让创作如流水般自然
                     </h1>
-                    <p class="hero-reveal text-lg md:text-2xl text-gray-400 mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed" style="animation-delay: 0.3s">
+                    <p class="hero-reveal text-lg md:text-2xl text-gray-600 mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed">
                         专为 Mac 打造的下一代中文语音输入法。全局唤醒，精准拾音，AI 智能润色，让您的思绪瞬间凝练为完美文字。
                     </p>
-                    <div class="hero-reveal flex flex-col sm:flex-row items-center justify-center gap-4 mb-16" style="animation-delay: 0.5s">
-                        <button class="glow-btn w-full sm:w-auto px-8 py-4 backdrop-blur-md rounded-2xl text-white font-medium text-lg flex items-center justify-center gap-3">
+                    <div class="hero-reveal flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                        <button class="glow-btn w-full sm:w-auto px-8 py-4 backdrop-blur-md rounded-2xl text-black font-medium text-lg flex items-center justify-center gap-3">
                             <i class="fa-brands fa-apple text-xl"></i>
                             下载 Mac 版
                         </button>
                     </div>
-                    <div class="hero-reveal flex justify-center" style="animation-delay: 0.7s">
-                        <a href="#ai-heading" onclick="event.preventDefault(); document.getElementById('ai-heading').scrollIntoView({behavior: 'smooth'})" class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-sm cursor-pointer hover:bg-white/10 transition-colors duration-300">
-                            <i class="fa-solid fa-arrow-down text-gray-400"></i>
+                    <div class="hero-reveal flex justify-center">
+                        <a href="#ai-heading" onclick="event.preventDefault(); document.getElementById('ai-heading').scrollIntoView({behavior: 'smooth'})" class="w-12 h-12 rounded-full bg-black/5 border border-black/10 flex items-center justify-center backdrop-blur-sm cursor-pointer hover:bg-black/10 transition-colors duration-300">
+                            <i class="fa-solid fa-arrow-down text-gray-600"></i>
                         </a>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Divider: Hero → AI Heading -->
+        <div aria-hidden="true" style="line-height:0; overflow:hidden; margin-top:-1px;"><svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display:block;width:100%;height:80px;"><defs><linearGradient id="div1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fafafa" stop-opacity="1"/><stop offset="100%" stop-color="#fafafa" stop-opacity="0"/></linearGradient></defs><path d="M0,0 C360,80 1080,0 1440,60 L1440,0 Z" fill="url(#div1)"/></svg></div>
+
         <!-- AI Heading Section (half screen, normal scroll) -->
         <section id="ai-heading" class="flex flex-col justify-center items-center text-center px-6" style="height: 50vh;">
-            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6" data-scroll="up">智能润色 · 出口成章</h2>
-            <p class="text-lg md:text-xl text-gray-400 max-w-2xl" data-scroll="up" data-scroll-delay="150">不止于语音转文字，更是您专属的 AI 写作伙伴</p>
+            <h2 class="text-3xl md:text-5xl font-bold text-black mb-6" data-scroll="left">智能润色 · 出口成章</h2>
+            <p class="text-lg md:text-xl text-gray-600 max-w-2xl" data-scroll="left" data-scroll-delay="150">不止于语音转文字，更是您专属的 AI 写作伙伴</p>
         </section>
+
+        <!-- Divider: AI Heading → MacBook -->
+        <div aria-hidden="true" style="line-height:0; overflow:hidden;"><svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display:block;width:100%;height:60px;"><path d="M0,30 C480,60 960,0 1440,30 L1440,60 L0,60 Z" fill="#f3f4f6" fill-opacity="0.5"/></svg></div>
 
         <!-- MacBook Feature Showcase (sticky, scroll-driven 4 screens + corner overlays) -->
         <div class="mac-scroll-wrapper" style="height: 300vh;">
@@ -354,8 +510,8 @@
                     <div class="mac-overlay-mobile md:hidden flex flex-col items-center"></div>
 
                     <!-- MacBook with screens -->
-                    <div style="display: grid; grid-template: 1fr / 1fr;">
-                        <div style="grid-area: 1/1; position: relative; z-index: 1; background: #050505;">
+                    <div data-scroll="right" style="display: grid; grid-template: 1fr / 1fr;">
+                        <div style="grid-area: 1/1; position: relative; z-index: 1; background: transparent;">
                             <div style="position: absolute; top: 11%; left: 10%; right: 10%; bottom: 11%; overflow: hidden; border-radius: 6px;">
 
                                 <!-- Screen 1: FlowVoice App -->
@@ -427,34 +583,38 @@
                         </div>
                         <img src="macbooktransparent.png" alt="MacBook Pro" style="grid-area: 1/1; position: relative; z-index: 10; pointer-events: none; width: 100%;">
                     </div>
+                    <p data-scroll="right" data-scroll-delay="150" style="text-align: right; color: #b0b0b0; font-size: 0.72rem; margin-top: 0.5rem;">界面仅用于概念演示，非实际产品界面。</p>
 
                     <!-- Corner Overlays -->
-                    <div class="mac-overlay absolute rounded-2xl" style="top: 5%; left: 3%; opacity: 0; z-index: 30; transition: opacity 0.3s; background: rgba(0,0,0,0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1);">
-                        <h3 class="text-lg md:text-xl font-bold text-white mb-2">智能润色 · 出口成章</h3>
-                        <p class="text-xs md:text-sm text-gray-300 leading-relaxed">支持多风格语音转文字，AI 实时润色，让每句话都恰如其分。</p>
+                    <div class="mac-overlay absolute rounded-2xl" style="top: 5%; left: 3%; opacity: 0; z-index: 30; transition: opacity 0.3s; background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); border: 1px solid rgba(0,0,0,0.1);">
+                        <h3 class="text-lg md:text-xl font-bold text-black mb-2">智能润色 · 出口成章</h3>
+                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed">支持多风格语音转文字，AI 实时润色，让每句话都恰如其分。</p>
                     </div>
-                    <div class="mac-overlay absolute rounded-2xl" style="bottom: 18%; left: 3%; opacity: 0; z-index: 30; transition: opacity 0.3s; background: rgba(0,0,0,0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1);">
-                        <h3 class="text-lg md:text-xl font-bold text-white mb-2">全局唤醒，随叫随到</h3>
-                        <p class="text-xs md:text-sm text-gray-300 leading-relaxed">无论您身处哪个应用、哪个界面，只需长按快捷键即可随时开启应用。流声在底层静谧运行，绝不打断您的工作流。</p>
+                    <div class="mac-overlay absolute rounded-2xl" style="bottom: 18%; left: 3%; opacity: 0; z-index: 30; transition: opacity 0.3s; background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); border: 1px solid rgba(0,0,0,0.1);">
+                        <h3 class="text-lg md:text-xl font-bold text-black mb-2">全局唤醒，随叫随到</h3>
+                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed">无论您身处哪个应用、哪个界面，只需长按快捷键即可随时开启应用。流声在底层静谧运行，绝不打断您的工作流。</p>
                     </div>
-                    <div class="mac-overlay absolute rounded-2xl" style="top: 5%; right: 3%; opacity: 0; z-index: 30; transition: opacity 0.3s; background: rgba(0,0,0,0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1);">
-                        <h3 class="text-lg md:text-xl font-bold text-white mb-2">焦点所至，文字即达</h3>
-                        <p class="text-xs md:text-sm text-gray-300 leading-relaxed">光标所在，文字即达。流声将润色后的文字精准送达光标处，让您彻底告别跨应用复制粘贴的繁琐。</p>
+                    <div class="mac-overlay absolute rounded-2xl" style="top: 5%; right: 3%; opacity: 0; z-index: 30; transition: opacity 0.3s; background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); border: 1px solid rgba(0,0,0,0.1);">
+                        <h3 class="text-lg md:text-xl font-bold text-black mb-2">焦点所至，文字即达</h3>
+                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed">光标所在，文字即达。流声将润色后的文字精准送达光标处，让您彻底告别跨应用复制粘贴的繁琐。</p>
                     </div>
-                    <div class="mac-overlay absolute rounded-2xl" style="bottom: 18%; right: 3%; opacity: 0; z-index: 30; transition: opacity 0.3s; background: rgba(0,0,0,0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1);">
-                        <h3 class="text-lg md:text-xl font-bold text-white mb-2">思绪流转成文</h3>
-                        <p class="text-xs md:text-sm text-gray-300 leading-relaxed">无需顾虑语气词、停顿或逻辑跳跃。本地大模型在毫秒间洞悉您所想，自动剔除冗余，让思绪如流水般自然注入文档。</p>
+                    <div class="mac-overlay absolute rounded-2xl" style="bottom: 18%; right: 3%; opacity: 0; z-index: 30; transition: opacity 0.3s; background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); border: 1px solid rgba(0,0,0,0.1);">
+                        <h3 class="text-lg md:text-xl font-bold text-black mb-2">思绪流转成文</h3>
+                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed">无需顾虑语气词、停顿或逻辑跳跃。本地大模型在毫秒间洞悉您所想，自动剔除冗余，让思绪如流水般自然注入文档。</p>
                     </div>
 
                 </div>
             </section>
         </div>
 
+        <!-- Divider: MacBook → Workflow -->
+        <div aria-hidden="true" style="line-height:0; overflow:hidden;"><svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display:block;width:100%;height:60px;"><path d="M0,30 C360,0 1080,60 1440,30 L1440,60 L0,60 Z" fill="#f3f4f6" fill-opacity="0.4"/></svg></div>
+
         <!-- Workflow Heading -->
-        <div class="w-full flex items-center justify-center text-center py-20" data-scroll="fade">
+        <div class="w-full flex items-center justify-center text-center py-20">
             <div class="max-w-4xl mx-auto px-6">
-                <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">工作流，从未如此流畅</h2>
-                <p class="text-base md:text-lg text-gray-400">无需切换窗口，无需手动复制，一切在后台悄然完成。</p>
+                <h2 class="text-3xl md:text-5xl font-bold text-black mb-4" data-scroll="up">工作流，从未如此流畅</h2>
+                <p class="text-base md:text-lg text-gray-600" data-scroll="up" data-scroll-delay="150">无需切换窗口，无需手动复制，一切在后台惄然完成。</p>
             </div>
         </div>
 
@@ -462,33 +622,36 @@
         <section class="py-20 md:py-32 relative z-10">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-                    <div class="bg-white/5 border border-white/10 rounded-[40px] p-12 md:p-14 backdrop-blur-sm hover:bg-white/10 transition-colors h-full flex flex-col" data-scroll="up" data-scroll-delay="0">
-                        <div class="w-20 h-20 bg-blue-500/20 rounded-3xl flex items-center justify-center mb-10"><i class="fa-solid fa-wand-magic-sparkles text-blue-400 text-3xl"></i></div>
-                        <h3 class="text-2xl md:text-3xl font-semibold text-white mb-6">多风格表达</h3>
-                        <p class="text-gray-400 text-lg leading-relaxed flex-1">提供商务、正式、日常等多种预设风格，亦可自定义专属语气，让您的表达恰如其分。</p>
+                    <div class="feature-card bg-black/5 border border-black/10 rounded-[40px] p-12 md:p-14 backdrop-blur-sm hover:bg-black/10 h-full flex flex-col" data-scroll="up" data-scroll-delay="0">
+                        <div class="feature-icon w-20 h-20 bg-blue-500/20 rounded-3xl flex items-center justify-center mb-10"><i class="fa-solid fa-wand-magic-sparkles text-blue-400 text-3xl"></i></div>
+                        <h3 class="text-2xl md:text-3xl font-semibold text-black mb-6">多风格表达</h3>
+                        <p class="text-gray-600 text-lg leading-relaxed flex-1">提供商务、正式、日常等多种预设风格，亦可自定义专属语气，让您的表达恰如其分。</p>
                     </div>
-                    <div class="bg-white/5 border border-white/10 rounded-[40px] p-12 md:p-14 backdrop-blur-sm hover:bg-white/10 transition-colors h-full flex flex-col" data-scroll="up" data-scroll-delay="150">
-                        <div class="w-20 h-20 bg-purple-500/20 rounded-3xl flex items-center justify-center mb-10"><i class="fa-solid fa-language text-purple-400 text-3xl"></i></div>
-                        <h3 class="text-2xl md:text-3xl font-semibold text-white mb-6">口语优化</h3>
-                        <p class="text-gray-400 text-lg leading-relaxed flex-1">自动过滤“嗯”、“啊”等语气词，纠正语法错误，将口述内容转化为条理清晰的书面文字。</p>
+                    <div class="feature-card bg-black/5 border border-black/10 rounded-[40px] p-12 md:p-14 backdrop-blur-sm hover:bg-black/10 h-full flex flex-col" data-scroll="up" data-scroll-delay="150">
+                        <div class="feature-icon w-20 h-20 bg-purple-500/20 rounded-3xl flex items-center justify-center mb-10"><i class="fa-solid fa-language text-purple-400 text-3xl"></i></div>
+                        <h3 class="text-2xl md:text-3xl font-semibold text-black mb-6">口语优化</h3>
+                        <p class="text-gray-600 text-lg leading-relaxed flex-1">自动过滤“嗯”、“啊”等语气词，纠正语法错误，将口述内容转化为条理清晰的书面文字。</p>
                     </div>
-                    <div class="bg-white/5 border border-white/10 rounded-[40px] p-12 md:p-14 backdrop-blur-sm hover:bg-white/10 transition-colors h-full flex flex-col" data-scroll="up" data-scroll-delay="300">
-                        <div class="w-20 h-20 bg-green-500/20 rounded-3xl flex items-center justify-center mb-10"><i class="fa-solid fa-bolt text-green-400 text-3xl"></i></div>
-                        <h3 class="text-2xl md:text-3xl font-semibold text-white mb-6">本地离线模型</h3>
-                        <p class="text-gray-400 text-lg leading-relaxed flex-1">内置高性能离线语音识别，响应极速，且彻底保障您的隐私安全。</p>
+                    <div class="feature-card bg-black/5 border border-black/10 rounded-[40px] p-12 md:p-14 backdrop-blur-sm hover:bg-black/10 h-full flex flex-col" data-scroll="up" data-scroll-delay="300">
+                        <div class="feature-icon w-20 h-20 bg-green-500/20 rounded-3xl flex items-center justify-center mb-10"><i class="fa-solid fa-bolt text-green-400 text-3xl"></i></div>
+                        <h3 class="text-2xl md:text-3xl font-semibold text-black mb-6">本地离线模型</h3>
+                        <p class="text-gray-600 text-lg leading-relaxed flex-1">内置高性能离线语音识别，响应极速，且彻底保障您的隐私安全。</p>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Divider: Feature Cards → CTA -->
+        <div aria-hidden="true" style="line-height:0; overflow:hidden;"><svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display:block;width:100%;height:80px;"><defs><linearGradient id="div2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#e0e7ff" stop-opacity="0.3"/><stop offset="50%" stop-color="#ede9fe" stop-opacity="0.4"/><stop offset="100%" stop-color="#e0e7ff" stop-opacity="0.3"/></linearGradient></defs><path d="M0,40 C360,80 1080,0 1440,50 L1440,80 L0,80 Z" fill="url(#div2)"/></svg></div>
+
         <!-- Final CTA Section (sticky dwell) -->
         <div style="height: 150vh;">
-            <section class="relative overflow-hidden border-t border-white/5 flex flex-col justify-center" style="height: 100vh; position: sticky; top: 0; padding: 4rem 0;">
-                <div class="absolute inset-0 bg-gradient-to-b from-darker to-dark z-0"></div>
+            <section class="relative overflow-hidden border-t border-black/5 flex flex-col justify-center" style="height: 100vh; position: sticky; top: 0; padding: 4rem 0;">
+                <div class="cta-backdrop absolute inset-0 bg-gradient-to-b from-darker to-dark z-0"></div>
                 <div class="max-w-4xl mx-auto px-6 relative z-10 text-center">
                     <h2 class="text-3xl md:text-5xl font-bold mb-6 md:mb-8" data-scroll="up">释放声音的无限可能</h2>
-                    <p class="text-xl text-gray-400 mb-12" data-scroll="up" data-scroll-delay="150">体验纯净、私密、高效的桌面级 AI 语音输入，让创作更专注。</p>
-                    <button class="glow-btn px-10 py-5 rounded-full text-white font-medium text-xl flex items-center gap-3 mx-auto" data-scroll="up" data-scroll-delay="300">
+                    <p class="text-xl text-gray-600 mb-12" data-scroll="up" data-scroll-delay="150">体验纯净、私密、高效的桌面级 AI 语音输入，让创作更专注。</p>
+                    <button class="cta-btn-premium glow-btn px-10 py-5 rounded-full text-black font-medium text-xl flex items-center gap-3 mx-auto" data-scroll="up" data-scroll-delay="300">
                         <i class="fa-brands fa-apple text-2xl"></i>
                         立即下载 Mac 版
                     </button>
@@ -503,7 +666,7 @@
     </main>
 
     <!-- Footer -->
-    <footer id="footer" class="border-t border-white/10 bg-darker pt-16 pb-8">
+    <footer id="footer" class="border-t border-black/10 bg-darker pt-16 pb-8">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
                 <div class="flex items-center">
@@ -511,65 +674,93 @@
                 </div>
                 
                 <div class="flex gap-8 text-sm text-gray-500">
-                    <a href="#" class="hover:text-white transition-colors">隐私政策</a>
-                    <a href="#" class="hover:text-white transition-colors">服务条款</a>
-                    <a href="#" class="hover:text-white transition-colors">联系我们</a>
+                    <a href="#" class="hover:text-black transition-colors">隐私政策</a>
+                    <a href="#" class="hover:text-black transition-colors">服务条款</a>
+                    <a href="#" class="hover:text-black transition-colors">联系我们</a>
                 </div>
             </div>
             
-            <div class="text-center text-xs text-gray-600">
-                &copy; 2023 FlowVoice. 保留所有权利。灵感，随声而至。
+            <div class="text-center text-xs text-gray-400"> 
+                &copy; 2026 FlowVoice. 保留所有权利。灵感，随声而至。
             </div>
         </div>
     </footer>
 
     <script>
-        (function() {
-            var scrollEls = document.querySelectorAll('[data-scroll]');
-            var animations = {
-                up:    { prop: 'translateY', from: 60 },
-                scale: { prop: 'scale', from: 0.92, ty: 40 },
-                left:  { prop: 'translateX', from: -60 },
-                right: { prop: 'translateX', from: 60 },
-                fade:  { prop: 'none' }
-            };
+    (function() {
+        'use strict';
 
-            function lerp(a, b, t) { return a + (b - a) * t; }
+        /* Motion tokens */
+        var MOTION = { fast: 160, base: 320, slow: 700, cinematic: 1200 };
+        var EASE = { standard: 'cubic-bezier(0.4,0,0.2,1)', emphasis: 'cubic-bezier(0.16,1,0.3,1)' };
+        var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        var isMobile = window.innerWidth < 768;
 
-            function update() {
-                var vh = window.innerHeight;
-                scrollEls.forEach(function(el) {
-                    var rect = el.getBoundingClientRect();
-                    var delay = parseInt(el.dataset.scrollDelay || 0);
-                    var start = vh * 1.05;
-                    var end = vh * 0.65;
-                    var raw = (start - rect.top) / (start - end);
-                    var delayOffset = delay / 600;
-                    var progress = Math.min(1, Math.max(0, raw - delayOffset));
-                    var eased = 1 - Math.pow(1 - progress, 3);
+        function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
 
-                    var type = el.dataset.scroll;
-                    var anim = animations[type] || animations.up;
+        /* Hero cinematic sequence */
+        var heroItems = document.querySelectorAll('#hero-section .hero-reveal');
+        var heroDelays = [0, 180, 320, 520];
+        heroItems.forEach(function(el, i) {
+            var d = prefersReduced ? 0 : (heroDelays[i] || i * 180);
+            setTimeout(function() { el.classList.add('revealed'); }, d);
+        });
 
-                    el.style.opacity = eased;
+        /* Hero glow drift */
+        var heroGlow = document.querySelector('.hero-glow');
+        if (heroGlow && !prefersReduced) heroGlow.classList.add('hero-glow-drift');
 
-                    if (anim.prop === 'translateY') {
-                        el.style.transform = 'translateY(' + lerp(anim.from, 0, eased) + 'px)';
-                    } else if (anim.prop === 'translateX') {
-                        el.style.transform = 'translateX(' + lerp(anim.from, 0, eased) + 'px)';
-                    } else if (anim.prop === 'scale') {
-                        var s = lerp(anim.from, 1, eased);
-                        var ty = lerp(anim.ty, 0, eased);
-                        el.style.transform = 'scale(' + s + ') translateY(' + ty + 'px)';
+        /* Header scroll state */
+        var header = document.getElementById('header');
+        var heroSection = document.getElementById('hero-section');
+        var headerThreshold = heroSection ? heroSection.offsetHeight * 0.5 : 400;
+        var headerScrolled = false;
+
+        /* Scroll reveal — one-time IntersectionObserver */
+        var scrollEls = document.querySelectorAll('[data-scroll]');
+        if ('IntersectionObserver' in window) {
+            scrollEls.forEach(function(el) {
+                el.style.opacity = '0';
+                var type = el.dataset.scroll;
+                if (type === 'up') el.style.transform = 'translateY(40px)';
+                else if (type === 'left') el.style.transform = 'translateX(-40px)';
+                else if (type === 'right') el.style.transform = 'translateX(40px)';
+                else if (type === 'scale') el.style.transform = 'scale(0.95) translateY(30px)';
+                el.style.transition = 'opacity ' + MOTION.slow + 'ms ' + EASE.emphasis + ', transform ' + MOTION.slow + 'ms ' + EASE.emphasis;
+            });
+
+            var scrollObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    var el = entry.target;
+                    if (entry.isIntersecting) {
+                        var delay = parseInt(el.dataset.scrollDelay || 0);
+                        if (prefersReduced) delay = 0;
+                        setTimeout(function() {
+                            el.style.opacity = '1';
+                            el.style.transform = '';
+                        }, delay);
                     } else {
-                        el.style.transform = 'none';
+                        var type = el.dataset.scroll;
+                        el.style.opacity = '0';
+                        if (type === 'up') el.style.transform = 'translateY(40px)';
+                        else if (type === 'left') el.style.transform = 'translateX(-40px)';
+                        else if (type === 'right') el.style.transform = 'translateX(40px)';
+                        else if (type === 'scale') el.style.transform = 'scale(0.95) translateY(30px)';
+                        else el.style.transform = '';
                     }
                 });
-                requestAnimationFrame(update);
-            }
-            requestAnimationFrame(update);
-        })();
+            }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
 
+            scrollEls.forEach(function(el) { scrollObserver.observe(el); });
+        } else {
+            scrollEls.forEach(function(el) {
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+            });
+        }
+
+        /* Screen content scaling */
         function scaleScreenContent() {
             document.querySelectorAll('.macbook-screen-content').forEach(function(el) {
                 var parentWidth = el.parentElement.offsetWidth;
@@ -580,39 +771,127 @@
         scaleScreenContent();
         window.addEventListener('resize', scaleScreenContent);
 
-        (function() {
-            var wrapper = document.querySelector('.mac-scroll-wrapper');
-            var screens = document.querySelectorAll('.mac-screen');
-            var overlays = document.querySelectorAll('.mac-overlay');
-            var mobileContainer = document.querySelector('.mac-overlay-mobile');
-            if (!wrapper || screens.length < 4) return;
+        /* MacBook showcase setup */
+        var macWrapper = document.querySelector('.mac-scroll-wrapper');
+        var macScreens = document.querySelectorAll('.mac-screen');
+        var macOverlays = document.querySelectorAll('.mac-overlay');
+        var macMobileContainer = document.querySelector('.mac-overlay-mobile');
+        var macShowcase = document.getElementById('macbook-showcase');
+        var macGridContainer = null;
+        var macLastPhase = -1;
+        var macActive = !!(macWrapper && macScreens.length >= 4);
 
-            var isMobile = window.innerWidth < 768;
-            if (isMobile && mobileContainer) {
-                overlays.forEach(function(o) { mobileContainer.appendChild(o); });
+        if (macActive) {
+            var isMobileNow = window.innerWidth < 768;
+            if (isMobileNow && macMobileContainer) {
+                macOverlays.forEach(function(o) { macMobileContainer.appendChild(o); });
             }
             window.addEventListener('resize', function() {
-                var nowMobile = window.innerWidth < 768;
-                if (nowMobile !== isMobile) {
-                    isMobile = nowMobile;
-                    location.reload();
-                }
+                if ((window.innerWidth < 768) !== isMobileNow) location.reload();
             });
+            var macImg = macShowcase ? macShowcase.querySelector('img[src*="macbook"]') : null;
+            macGridContainer = macImg ? macImg.parentElement : null;
+        }
 
-            function updateMacScreens() {
-                var rect = wrapper.getBoundingClientRect();
-                var scrollRange = wrapper.offsetHeight - window.innerHeight;
-                var progress = Math.min(1, Math.max(0, -rect.top / scrollRange));
-                var numPhases = 4;
-                var phase = Math.min(numPhases - 1, Math.floor(progress * numPhases));
+        /* Ambient glow elements for parallax */
+        var glowBgs = document.querySelectorAll('.glow-bg');
 
-                screens.forEach(function(s, i) { s.style.opacity = (i === phase) ? '1' : '0'; });
-                overlays.forEach(function(o, i) { o.style.opacity = (i === phase) ? '1' : '0'; });
+        /* Consolidated animation loop */
+        function tick() {
+            var scrollY = window.scrollY;
 
-                requestAnimationFrame(updateMacScreens);
+            /* Header state */
+            if (header) {
+                var isScrolled = scrollY > headerThreshold;
+                if (isScrolled !== headerScrolled) {
+                    headerScrolled = isScrolled;
+                    header.classList.toggle('header-scrolled', headerScrolled);
+                }
             }
-            requestAnimationFrame(updateMacScreens);
-        })();
+
+            /* Hero parallax (desktop only, respects reduced-motion) */
+            if (!prefersReduced && !isMobile && heroSection) {
+                var heroH = heroSection.offsetHeight;
+                if (scrollY <= heroH * 1.2) {
+                    var ratio = scrollY / heroH;
+                    glowBgs.forEach(function(g) {
+                        g.style.transform = 'translateY(' + (ratio * heroH * 0.15).toFixed(1) + 'px)';
+                    });
+                }
+            }
+
+            /* MacBook showcase */
+            if (macActive) {
+                var rect = macWrapper.getBoundingClientRect();
+                var scrollRange = macWrapper.offsetHeight - window.innerHeight;
+                if (scrollRange > 0) {
+                    var progress = clamp(-rect.top / scrollRange, 0, 1);
+                    var phaseFloat = progress * 4;
+                    var phase = Math.min(3, Math.floor(phaseFloat));
+                    var phaseProg = phaseFloat - phase;
+
+                    /* Cross-fade screens */
+                    macScreens.forEach(function(s, i) {
+                        if (i === phase) {
+                            s.style.opacity = '1';
+                        } else if (i === phase + 1 && phaseProg > 0.7) {
+                            s.style.opacity = ((phaseProg - 0.7) / 0.3).toFixed(3);
+                        } else {
+                            s.style.opacity = '0';
+                        }
+                    });
+
+                    /* Overlay choreography */
+                    if (phase !== macLastPhase) {
+                        macOverlays.forEach(function(o, i) {
+                            o.classList.toggle('overlay-visible', i === phase);
+                        });
+                        macLastPhase = phase;
+                    }
+
+                    /* Subtle frame tilt (pointer devices only) */
+                    if (macGridContainer && !prefersReduced && !isTouchDevice) {
+                        var tilt = Math.sin(progress * Math.PI) * 2.5;
+                        macGridContainer.style.transform = 'perspective(1200px) rotateY(' + tilt.toFixed(2) + 'deg)';
+                    }
+                }
+            }
+
+            requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+
+        /* CTA magnetic hover (pointer devices, no reduced-motion) */
+        if (!prefersReduced && !isTouchDevice) {
+            var ctaBtn = document.querySelector('.cta-btn-premium');
+            if (ctaBtn) {
+                var btnRect;
+                ctaBtn.addEventListener('mouseenter', function() {
+                    btnRect = ctaBtn.getBoundingClientRect();
+                });
+                ctaBtn.addEventListener('mousemove', function(e) {
+                    if (!btnRect) return;
+                    var dx = (e.clientX - (btnRect.left + btnRect.width / 2)) * 0.06;
+                    var dy = (e.clientY - (btnRect.top + btnRect.height / 2)) * 0.06;
+                    ctaBtn.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
+                });
+                ctaBtn.addEventListener('mouseleave', function() {
+                    ctaBtn.style.transform = '';
+                });
+            }
+        }
+
+        /* Feature card icon pulse on hover */
+        document.querySelectorAll('.feature-card').forEach(function(card) {
+            var icon = card.querySelector('.feature-icon');
+            if (!icon) return;
+            card.addEventListener('mouseenter', function() {
+                icon.style.animation = 'none';
+                void icon.offsetWidth;
+                icon.style.animation = 'iconPulse 400ms ' + EASE.emphasis;
+            });
+        });
+    })();
     </script>
 </body>
 </html>

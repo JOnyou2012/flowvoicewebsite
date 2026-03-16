@@ -30,7 +30,7 @@ if lsof -ti tcp:"$PORT" >/dev/null 2>&1; then
 fi
 
 TARGET_URL_PATH="${TARGET_FILE// /%20}"
-TARGET_URL="http://localhost:$PORT/$TARGET_URL_PATH"
+TARGET_URL="http://localhost:$PORT/$TARGET_URL_PATH?v=$(date +%s)"
 
 echo "Serving $TARGET_FILE on $TARGET_URL"
 (sleep 1 && open "$TARGET_URL") &
