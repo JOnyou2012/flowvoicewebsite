@@ -353,23 +353,105 @@
             position: relative;
         }
 
-        /* === Section: Gradient Scenario === */
-        .section-gradient {
-            padding: 120px 24px;
-            text-align: center;
+        /* === Section: Gradient Scenario (Sticky Scroll-Through) === */
+        .scenario-scroll-wrapper {
             position: relative;
+            height: 300vh;
+        }
+        .scenario-sticky {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
-        .gradient-writing { background: linear-gradient(135deg, #FF2D95, #9A5CF9, #007AFF); }
-        .gradient-meeting { background: linear-gradient(135deg, #5AC8FA, #007AFF, #3a1c71); }
-        .gradient-creative { background: linear-gradient(135deg, #06b6d4, #0077ff, #1e3a8a); }
-        .gradient-private { background: linear-gradient(135deg, #9A5CF9, #007AFF, #1e3a8a); }
-
-        .section-gradient .section-inner {
-            max-width: 980px;
-            margin: 0 auto;
+        .scenario-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background: linear-gradient(135deg, #9A5CF9, #6366f1, #007AFF, #5AC8FA, #9A5CF9);
+            background-size: 400% 400%;
+            animation: scenarioGradientMove 30s ease infinite;
+        }
+        @keyframes scenarioGradientMove {
+            0%   { background-position: 0% 50%; }
+            25%  { background-position: 100% 0%; }
+            50%  { background-position: 100% 100%; }
+            75%  { background-position: 0% 100%; }
+            100% { background-position: 0% 50%; }
+        }
+        .scenario-content {
             position: relative;
             z-index: 2;
+            max-width: 980px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 24px;
+        }
+        .scenario-slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s var(--ease-emphasis), transform 0.5s var(--ease-emphasis);
+            pointer-events: none;
+        }
+        .scenario-slide.scenario-active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .scenario-slide .text-body {
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 16px;
+        }
+        .scenario-slide .text-display-section {
+            color: #fff;
+            margin-bottom: 0;
+        }
+        .scenario-progress {
+            position: absolute;
+            bottom: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            gap: 12px;
+        }
+        .scenario-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .scenario-dot.dot-active {
+            background: #fff;
+            transform: scale(1.3);
+        }
+        @media (max-width: 767px) {
+            .scenario-scroll-wrapper { height: auto !important; }
+            .scenario-sticky {
+                position: relative !important;
+                height: auto !important;
+                flex-direction: column;
+                padding: 80px 16px;
+            }
+            .scenario-slide {
+                position: relative !important;
+                opacity: 1 !important;
+                transform: none !important;
+                pointer-events: auto !important;
+                margin-bottom: 60px;
+            }
+            .scenario-progress { display: none; }
         }
 
         /* === MacBook Showcase === */
@@ -560,6 +642,9 @@
             font-size: 16px;
             line-height: 1.6;
             color: rgba(255,255,255,0.75);
+        }
+        @media (max-width: 767px) {
+            .scenario-card { margin: 24px auto 0; }
         }
 
         /* === Utterance River (marquee) === */
@@ -1056,50 +1141,54 @@
         </div>
     </section>
 
-    <!-- ===== Scenario Sections (Gradient, Apple-style) ===== -->
-    <div id="scenarios">
+    <!-- ===== Scenario Sections (Sticky Scroll-Through with Animated Gradient) ===== -->
+    <div id="scenarios" class="scenario-scroll-wrapper">
+        <div class="scenario-sticky">
+            <div class="scenario-bg"></div>
 
-        <!-- Scenario 1: Writing -->
-        <section class="section-gradient gradient-writing">
-            <div class="section-inner" style="color: #fff;">
-                <p class="text-body" data-scroll="up" style="color: rgba(255,255,255,0.6); margin-bottom: 16px;">场景一</p>
-                <h2 class="text-display-section" data-scroll="up" data-scroll-delay="100" style="color: #fff;">
+            <!-- Slide 1: Writing -->
+            <div class="scenario-slide scenario-active" data-scenario="0">
+                <p class="text-body">场景一</p>
+                <h2 class="text-display-section">
                     写作<br>创作。
                 </h2>
-                <div class="scenario-card" data-scroll="up" data-scroll-delay="250">
+                <div class="scenario-card">
                     <h3>文思泉涌，落笔成章</h3>
                     <p>无论是撰写报告、回复邮件还是创作文章，只需开口说出想法，流声即刻帮您整理成流畅的书面表达。告别键盘束缚，让灵感自由流淌。</p>
                 </div>
             </div>
-        </section>
 
-        <!-- Scenario 2: Meeting -->
-        <section class="section-gradient gradient-meeting">
-            <div class="section-inner" style="color: #fff;">
-                <p class="text-body" data-scroll="up" style="color: rgba(255,255,255,0.6); margin-bottom: 16px;">场景二</p>
-                <h2 class="text-display-section" data-scroll="up" data-scroll-delay="100" style="color: #fff;">
+            <!-- Slide 2: Meeting -->
+            <div class="scenario-slide" data-scenario="1">
+                <p class="text-body">场景二</p>
+                <h2 class="text-display-section">
                     会议<br>记录。
                 </h2>
-                <div class="scenario-card" data-scroll="up" data-scroll-delay="250">
+                <div class="scenario-card">
                     <h3>会中实时记录，会后整理如新</h3>
                     <p>在会议进行时同步记录发言内容，AI 自动整理要点、去除口语化表述，生成结构清晰的纪要。再也不用担心遗漏关键信息。</p>
                 </div>
             </div>
-        </section>
 
-        <!-- Scenario 3: Creative -->
-        <section class="section-gradient gradient-creative">
-            <div class="section-inner" style="color: #fff;">
-                <p class="text-body" data-scroll="up" style="color: rgba(255,255,255,0.6); margin-bottom: 16px;">场景三</p>
-                <h2 class="text-display-section" data-scroll="up" data-scroll-delay="100" style="color: #fff;">
+            <!-- Slide 3: Creative -->
+            <div class="scenario-slide" data-scenario="2">
+                <p class="text-body">场景三</p>
+                <h2 class="text-display-section">
                     灵感<br>捕捉。
                 </h2>
-                <div class="scenario-card" data-scroll="up" data-scroll-delay="250">
+                <div class="scenario-card">
                     <h3>一闪而过的灵感，再不错过</h3>
                     <p>散步时的突发奇想、临睡前的绝妙创意——只需对着 Mac 说出来，流声会帮你捕捉、润色并保存。思维的火花，一个不落。</p>
                 </div>
             </div>
-        </section>
+
+            <!-- Progress dots -->
+            <div class="scenario-progress">
+                <div class="scenario-dot dot-active"></div>
+                <div class="scenario-dot"></div>
+                <div class="scenario-dot"></div>
+            </div>
+        </div>
     </div>
 
     <!-- ===== Utterance River (Marquee) ===== -->
@@ -1312,6 +1401,13 @@
         var macLastPhase = -1;
         var macActive = !!(macWrapper && macScreens.length >= 4);
 
+        /* === Scenario scroll-through === */
+        var scenarioWrapper = document.querySelector('.scenario-scroll-wrapper');
+        var scenarioSlides = document.querySelectorAll('.scenario-slide');
+        var scenarioDots = document.querySelectorAll('.scenario-dot');
+        var scenarioLastIdx = 0;
+        var scenarioActive = !!(scenarioWrapper && scenarioSlides.length > 0);
+
         /* === Screen content scaling === */
         function scaleScreenContent() {
             document.querySelectorAll('.macbook-screen-content').forEach(function(el) {
@@ -1375,6 +1471,26 @@
                 /* On mobile, show all overlays */
                 macOverlays.forEach(function(o) { o.classList.add('overlay-visible'); });
                 macScreens[0].style.opacity = '1';
+            }
+
+            /* Scenario scroll-through */
+            if (scenarioActive && !isMobile) {
+                var sRect = scenarioWrapper.getBoundingClientRect();
+                var sRange = scenarioWrapper.offsetHeight - window.innerHeight;
+                if (sRange > 0) {
+                    var sProgress = clamp(-sRect.top / sRange, 0, 1);
+                    var slideCount = scenarioSlides.length;
+                    var activeIdx = Math.min(slideCount - 1, Math.floor(sProgress * slideCount));
+                    if (activeIdx !== scenarioLastIdx) {
+                        scenarioSlides.forEach(function(slide, i) {
+                            slide.classList.toggle('scenario-active', i === activeIdx);
+                        });
+                        scenarioDots.forEach(function(dot, i) {
+                            dot.classList.toggle('dot-active', i === activeIdx);
+                        });
+                        scenarioLastIdx = activeIdx;
+                    }
+                }
             }
 
             requestAnimationFrame(tick);
