@@ -922,6 +922,292 @@
         .mb-40 { margin-bottom: 40px; }
         .mb-60 { margin-bottom: 60px; }
         .mb-80 { margin-bottom: 80px; }
+
+        /* === Chinese Typing Test === */
+        .typing-test-section {
+            background: var(--bg-white);
+            padding: 120px 24px;
+            text-align: center;
+            position: relative;
+        }
+        .typing-test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        .test-side-by-side {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 900px) {
+            .test-side-by-side { grid-template-columns: 1fr; }
+        }
+        .test-panel-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 12px;
+        }
+        .typing-test-box {
+            background: rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 28px;
+            padding: 48px 40px;
+            text-align: left;
+            position: relative;
+            cursor: text;
+            transition: border-color var(--motion-base) var(--ease-standard),
+                        box-shadow var(--motion-base) var(--ease-standard);
+        }
+        .typing-test-box:hover {
+            border-color: rgba(0,0,0,0.1);
+        }
+        .typing-test-box.typing-focused {
+            border-color: rgba(99,102,241,0.3);
+            box-shadow: 0 0 0 4px rgba(99,102,241,0.08);
+        }
+        .typing-test-prompt {
+            display: inline;
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: 500;
+            line-height: 2;
+            letter-spacing: 0.05em;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .typing-char {
+            position: relative;
+            color: var(--text-tertiary);
+            transition: color 80ms ease;
+        }
+        .typing-char.correct {
+            color: var(--text-primary);
+        }
+        .typing-char.incorrect {
+            color: #ff3b30;
+            background: rgba(255,59,48,0.08);
+            border-radius: 4px;
+        }
+        .typing-char.current {
+            color: var(--text-tertiary);
+        }
+        .typing-char.current::after {
+            content: '';
+            position: absolute;
+            left: -1px;
+            top: 0.1em;
+            width: 2px;
+            height: 1.1em;
+            background: var(--brand-violet);
+            border-radius: 1px;
+            animation: typingCaret 1s step-end infinite;
+        }
+        @keyframes typingCaret {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .typing-test-hint {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-tertiary);
+            transition: opacity var(--motion-base) var(--ease-standard);
+        }
+        .typing-test-hint.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .typing-hidden-input {
+            position: absolute;
+            opacity: 0;
+            width: 2px;
+            height: 1.6em;
+            border: none;
+            outline: none;
+            background: transparent;
+            z-index: 10;
+            font-size: inherit;
+            padding: 0;
+            margin: 0;
+            caret-color: transparent;
+        }
+        .typing-char.composing {
+            color: var(--brand-violet);
+            opacity: 0.75;
+            font-style: italic;
+            font-size: 0.72em;
+            vertical-align: middle;
+        }
+        .typing-result {
+            margin-top: 32px;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 500ms var(--ease-emphasis), transform 500ms var(--ease-emphasis);
+            pointer-events: none;
+        }
+        .typing-result.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .typing-result-inner {
+            display: inline-flex;
+            align-items: center;
+            gap: 32px;
+            background: rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 980px;
+            padding: 16px 40px;
+        }
+        .typing-stat {
+            text-align: center;
+        }
+        .typing-stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        .typing-stat-value.wpm-value {
+            background: linear-gradient(135deg, var(--brand-purple), var(--brand-violet));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .typing-stat-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .typing-stat-divider {
+            width: 1px;
+            height: 40px;
+            background: rgba(0,0,0,0.1);
+        }
+        .typing-restart-btn {
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 980px;
+            background: var(--text-primary);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all var(--motion-base) var(--ease-standard);
+        }
+        .typing-restart-btn:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .typing-restart-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* === Speech Simulation === */
+        .speech-sim-wrapper {
+            margin-top: 20px;
+        }
+        .speech-sim-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 16px;
+        }
+        .speech-sim-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-tertiary);
+            transition: background 300ms ease;
+        }
+        .speech-sim-dot.live {
+            background: #ff3b30;
+            animation: speechDotPulse 1.2s ease-in-out infinite;
+        }
+        .speech-sim-dot.done {
+            background: #34c759;
+            animation: none;
+        }
+        @keyframes speechDotPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+        .speech-sim-box {
+            background: rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 28px;
+            padding: 40px;
+            text-align: left;
+            min-height: 100px;
+            transition: background 800ms var(--ease-emphasis), border-color 800ms var(--ease-emphasis);
+        }
+        .speech-sim-box--done {
+            background: linear-gradient(135deg, #9A5CF9, #6366f1, #007AFF);
+            border-color: transparent;
+        }
+        .speech-sim-box--done .speech-sim-text span {
+            color: #fff !important;
+        }
+        .speech-result-fadein {
+            animation: speechFadeIn 300ms var(--ease-emphasis) both;
+        }
+        @keyframes speechFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .speech-sim-text {
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: 500;
+            line-height: 2;
+            letter-spacing: 0.05em;
+            color: var(--text-primary);
+        }
+        .speech-sim-text .filler {
+            color: #ff3b30;
+            font-style: italic;
+        }
+        .speech-sim-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.1em;
+            background: var(--brand-violet);
+            border-radius: 1px;
+            vertical-align: text-bottom;
+            margin-left: 1px;
+            animation: typingCaret 1s step-end infinite;
+        }
+        .speech-sim-speed {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+        .speech-sim-speed i {
+            color: var(--brand-purple);
+        }
+        .proc-dot {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 700;
+            color: var(--brand-violet);
+            opacity: 0;
+            transition: opacity 200ms ease;
+        }
     </style>
 </head>
 <body>
@@ -1107,12 +1393,70 @@
         </section>
     </div>
 
+    <!-- ===== Chinese Typing Test ===== -->
+    <section class="typing-test-section" id="typing-test">
+        <div class="typing-test-container">
+            <p class="text-body-large mb-20" data-scroll="up" style="color: var(--text-secondary);">速度对比</p>
+            <h2 class="text-display-section mb-60" data-scroll="up" data-scroll-delay="100">
+                开口即达，<br><span class="text-gradient-brand">快过键盘。</span>
+            </h2>
+
+            <div class="test-side-by-side" data-scroll="up" data-scroll-delay="200">
+
+                <!-- Left: Human typing test -->
+                <div>
+                    <p class="test-panel-label"><i class="fa-solid fa-keyboard" style="margin-right:6px;"></i>人工打字</p>
+                    <div class="typing-test-box" id="typingTestBox">
+                        <div class="typing-test-prompt" id="typingPrompt"></div>
+                        <input class="typing-hidden-input" id="typingInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                    </div>
+                    <p class="typing-test-hint" id="typingHint">点击上方开始打字</p>
+                    <div class="typing-result" id="typingResult">
+                        <div class="typing-result-inner">
+                            <div class="typing-stat">
+                                <div class="typing-stat-value wpm-value" id="typingWpm">0</div>
+                                <div class="typing-stat-label">字/分钟</div>
+                            </div>
+                            <div class="typing-stat-divider"></div>
+                            <div class="typing-stat">
+                                <div class="typing-stat-value" id="typingAccuracy" style="color: var(--text-primary);">0%</div>
+                                <div class="typing-stat-label">准确率</div>
+                            </div>
+                            <div class="typing-stat-divider"></div>
+                            <div class="typing-stat">
+                                <div class="typing-stat-value" id="typingTime" style="color: var(--text-primary);">0s</div>
+                                <div class="typing-stat-label">用时</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <button class="typing-restart-btn" id="typingRestart">
+                                <i class="fa-solid fa-arrow-rotate-right"></i>
+                                重新测试
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Voice simulation -->
+                <div>
+                    <p class="test-panel-label"><i class="fa-solid fa-microphone" style="margin-right:6px;"></i>流声语音输入</p>
+                    <div class="speech-sim-wrapper" id="speechSimWrapper" style="margin-top:0;">
+                        <div class="speech-sim-box">
+                            <div class="speech-sim-text" id="speechSimText"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
     <!-- ===== Feature Cards (White Section) ===== -->
     <section class="section-white" id="workflow">
         <div class="section-inner">
             <p class="text-body-large mb-20" data-scroll="up" style="color: var(--text-secondary);">无缝工作流</p>
             <h2 class="text-display-section mb-60" data-scroll="up" data-scroll-delay="100">
-                从未如此<br>流畅。
+                从未如此<br><span class="text-gradient-brand">流畅。</span>
             </h2>
 
             <div class="feature-grid">
@@ -1150,7 +1494,7 @@
             <div class="scenario-slide scenario-active" data-scenario="0">
                 <p class="text-body">场景一</p>
                 <h2 class="text-display-section">
-                    写作<br>创作。
+                    写作<br><span class="text-gradient-white">创作。</span>
                 </h2>
                 <div class="scenario-card">
                     <h3>文思泉涌，落笔成章</h3>
@@ -1162,7 +1506,7 @@
             <div class="scenario-slide" data-scenario="1">
                 <p class="text-body">场景二</p>
                 <h2 class="text-display-section">
-                    编程<br>开发。
+                    编程<br><span class="text-gradient-white">开发。</span>
                 </h2>
                 <div class="scenario-card">
                     <h3>口述逻辑，代码自成</h3>
@@ -1174,7 +1518,7 @@
             <div class="scenario-slide" data-scenario="2">
                 <p class="text-body">场景三</p>
                 <h2 class="text-display-section">
-                    灵感<br>捕捉。
+                    灵感<br><span class="text-gradient-white">捕捉。</span>
                 </h2>
                 <div class="scenario-card">
                     <h3>一闪而过的灵感，再不错过</h3>
@@ -1523,6 +1867,362 @@
                 icon.style.animation = 'iconPulse 400ms cubic-bezier(0.16,1,0.3,1)';
             });
         });
+
+        /* === Chinese Typing Test === */
+        (function initTypingTest() {
+            var testText = '我坐在窗边，看着外面的灯一点点亮起来，然后我想，也许每天都有一些普通的事情挺不错的。';
+            var chars = testText.split('');
+            var promptEl = document.getElementById('typingPrompt');
+            var inputEl = document.getElementById('typingInput');
+            var boxEl = document.getElementById('typingTestBox');
+            var hintEl = document.getElementById('typingHint');
+            var resultEl = document.getElementById('typingResult');
+            var wpmEl = document.getElementById('typingWpm');
+            var accuracyEl = document.getElementById('typingAccuracy');
+            var timeEl = document.getElementById('typingTime');
+            var restartBtn = document.getElementById('typingRestart');
+
+            if (!promptEl || !inputEl || !boxEl) return;
+
+            var startTime = null;
+            var finished = false;
+            var correctCount = 0;
+            var totalTyped = 0;
+            var currentIndex = 0;
+            var charHistory = []; // tracks correctness per index for backspace
+
+            function repositionInput() {
+                var spans = promptEl.querySelectorAll('.typing-char');
+                var target = spans[currentIndex] || spans[spans.length - 1];
+                if (!target) return;
+                var boxRect = boxEl.getBoundingClientRect();
+                var charRect = target.getBoundingClientRect();
+                inputEl.style.left = (charRect.left - boxRect.left) + 'px';
+                inputEl.style.top  = (charRect.top  - boxRect.top)  + 'px';
+            }
+
+            function renderChars() {
+                promptEl.innerHTML = '';
+                chars.forEach(function(ch, i) {
+                    var span = document.createElement('span');
+                    span.className = 'typing-char';
+                    span.textContent = ch;
+                    span.dataset.ch = ch;
+                    if (i === currentIndex && !finished) {
+                        span.classList.add('current');
+                    }
+                    promptEl.appendChild(span);
+                });
+            }
+
+            function updateChar(index, isCorrect) {
+                var spans = promptEl.querySelectorAll('.typing-char');
+                if (spans[index]) {
+                    spans[index].classList.remove('current');
+                    spans[index].classList.add(isCorrect ? 'correct' : 'incorrect');
+                }
+                if (index + 1 < chars.length && !finished) {
+                    spans[index + 1].classList.add('current');
+                }
+                repositionInput();
+            }
+
+            function completeTest() {
+                finished = true;
+                var endTime = Date.now();
+                var elapsedMs = endTime - startTime;
+                var elapsedSec = elapsedMs / 1000;
+                var elapsedMin = elapsedSec / 60;
+
+                var wpm = Math.round(correctCount / Math.max(elapsedMin, 0.01));
+                var accuracy = totalTyped > 0 ? Math.round((correctCount / totalTyped) * 100) : 0;
+
+                wpmEl.textContent = wpm;
+                accuracyEl.textContent = accuracy + '%';
+                timeEl.textContent = elapsedSec.toFixed(1) + 's';
+
+                resultEl.classList.add('visible');
+                hintEl.classList.add('hidden');
+
+                // remove caret from last char
+                var spans = promptEl.querySelectorAll('.typing-char');
+                spans.forEach(function(s) { s.classList.remove('current'); });
+            }
+
+            function resetTest() {
+                startTime = null;
+                finished = false;
+                correctCount = 0;
+                totalTyped = 0;
+                currentIndex = 0;
+                charHistory = [];
+                inputEl.value = '';
+                resultEl.classList.remove('visible');
+                hintEl.classList.remove('hidden');
+                renderChars();
+                inputEl.focus();
+            }
+
+            renderChars();
+
+            boxEl.addEventListener('click', function() {
+                if (!finished) {
+                    inputEl.focus();
+                }
+            });
+
+            inputEl.addEventListener('focus', function() {
+                boxEl.classList.add('typing-focused');
+                hintEl.classList.add('hidden');
+                repositionInput();
+            });
+
+            inputEl.addEventListener('blur', function() {
+                boxEl.classList.remove('typing-focused');
+                if (!startTime && !finished) {
+                    hintEl.classList.remove('hidden');
+                }
+            });
+
+            // Backspace: undo last character
+            inputEl.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && !composing && !finished && currentIndex > 0) {
+                    e.preventDefault();
+                    currentIndex--;
+                    var wasCorrect = charHistory[currentIndex];
+                    charHistory.splice(currentIndex, 1);
+                    totalTyped--;
+                    if (wasCorrect) correctCount--;
+                    var spans = promptEl.querySelectorAll('.typing-char');
+                    // clear next char's current marker if it exists
+                    if (spans[currentIndex + 1]) spans[currentIndex + 1].classList.remove('current');
+                    spans[currentIndex].classList.remove('correct', 'incorrect');
+                    spans[currentIndex].classList.add('current');
+                    repositionInput();
+                }
+            });
+
+            inputEl.addEventListener('input', function(e) {
+                if (finished || composing) return;
+
+                var value = e.data;
+                if (!value) return;
+
+                // start timer on first input
+                if (!startTime) {
+                    startTime = Date.now();
+                }
+
+                // process each character typed
+                var typedChars = value.split('');
+                for (var t = 0; t < typedChars.length; t++) {
+                    if (currentIndex >= chars.length) break;
+
+                    totalTyped++;
+                    var isCorrect = typedChars[t] === chars[currentIndex];
+                    if (isCorrect) correctCount++;
+                    charHistory[currentIndex] = isCorrect;
+
+                    updateChar(currentIndex, isCorrect);
+                    currentIndex++;
+
+                    if (currentIndex >= chars.length) {
+                        completeTest();
+                        break;
+                    }
+                }
+
+                // clear input to keep it fresh for next character
+                inputEl.value = '';
+            });
+
+            // handle composition (IME) for Chinese input
+            var composing = false;
+            inputEl.addEventListener('compositionstart', function() {
+                composing = true;
+                var spans = promptEl.querySelectorAll('.typing-char');
+                if (spans[currentIndex]) spans[currentIndex].classList.add('composing');
+            });
+            inputEl.addEventListener('compositionupdate', function(e) {
+                var text = e.data || '';
+                var spans = promptEl.querySelectorAll('.typing-char');
+                if (spans[currentIndex]) {
+                    spans[currentIndex].textContent = text || spans[currentIndex].dataset.ch;
+                }
+                repositionInput();
+            });
+            inputEl.addEventListener('compositionend', function(e) {
+                composing = false;
+                // Restore span to original char first
+                var spans = promptEl.querySelectorAll('.typing-char');
+                if (spans[currentIndex]) {
+                    spans[currentIndex].textContent = spans[currentIndex].dataset.ch;
+                    spans[currentIndex].classList.remove('composing');
+                }
+                if (finished) return;
+
+                var composed = e.data || '';
+                if (!composed) return;
+
+                if (!startTime) {
+                    startTime = Date.now();
+                }
+
+                var typedChars = composed.split('');
+                for (var t = 0; t < typedChars.length; t++) {
+                    if (currentIndex >= chars.length) break;
+
+                    totalTyped++;
+                    var isCorrect = typedChars[t] === chars[currentIndex];
+                    if (isCorrect) correctCount++;
+                    charHistory[currentIndex] = isCorrect;
+
+                    updateChar(currentIndex, isCorrect);
+                    currentIndex++;
+
+                    if (currentIndex >= chars.length) {
+                        completeTest();
+                        break;
+                    }
+                }
+
+                inputEl.value = '';
+            });
+
+            restartBtn.addEventListener('click', function() {
+                resetTest();
+                resetSpeechSim();
+            });
+
+            /* === Speech Simulation at 180 WPM === */
+            var speechTextEl = document.getElementById('speechSimText');
+            var speechTimers = [];
+            var speechStarted = false;
+
+            // Build the script: original text with fillers inserted at natural pause points
+            var speechScript = [
+                { text: '我坐在窗边，', filler: false },
+                { text: '嗯…', filler: true },
+                { text: '看着外面的灯', filler: false },
+                { text: '呃…', filler: true },
+                { text: '一点点亮起来，', filler: false },
+                { text: '嗯…', filler: true },
+                { text: '然后我想，', filler: false },
+                { text: '呃…就是…', filler: true },
+                { text: '也许每天都有', filler: false },
+                { text: '嗯…', filler: true },
+                { text: '一些普通的事情', filler: false },
+                { text: '呃…', filler: true },
+                { text: '挺不错的。', filler: false }
+            ];
+
+            // Calculate total real chars (non-filler) for timing
+            var totalRealChars = 0;
+            speechScript.forEach(function(seg) {
+                if (!seg.filler) totalRealChars += seg.text.length;
+            });
+
+            // 180 chars per minute = 3 chars per second
+            var msPerChar = 60000 / 270; // ~222ms per character
+            var fillerPause = 400; // extra pause for filler words
+
+            function startSpeechSim() {
+                if (speechStarted) return;
+                speechStarted = true;
+                speechTextEl.innerHTML = '<span class="speech-sim-cursor"></span>';
+
+                var elapsed = 0;
+
+                speechScript.forEach(function(segment) {
+                    var segChars = segment.text.split('');
+                    segChars.forEach(function(ch) {
+                        var delay = elapsed;
+                        var isFiller = segment.filler;
+                        speechTimers.push(setTimeout(function() {
+                            // Remove previous cursor
+                            var oldCursor = speechTextEl.querySelector('.speech-sim-cursor');
+                            if (oldCursor) oldCursor.remove();
+
+                            var span = document.createElement('span');
+                            span.textContent = ch;
+                            if (isFiller) span.className = 'filler';
+                            speechTextEl.appendChild(span);
+
+                            // Re-add cursor
+                            var cursor = document.createElement('span');
+                            cursor.className = 'speech-sim-cursor';
+                            speechTextEl.appendChild(cursor);
+                        }, delay));
+
+                        elapsed += segment.filler ? (msPerChar * 0.6) : msPerChar;
+                    });
+
+                    // Add a pause after fillers
+                    if (segment.filler) {
+                        elapsed += fillerPause;
+                    }
+                });
+
+                // Mark done after all chars, then show processing dots for 3s
+                speechTimers.push(setTimeout(function() {
+                    var oldCursor = speechTextEl.querySelector('.speech-sim-cursor');
+                    if (oldCursor) oldCursor.remove();
+                    // 1 second pause, then start the dots
+                    speechTimers.push(setTimeout(function() {
+
+                        // Replace content with animated dots
+                        speechTextEl.innerHTML =
+                            '<span class="proc-dot" id="pd1">.</span>' +
+                            '<span class="proc-dot" id="pd2">.</span>' +
+                            '<span class="proc-dot" id="pd3">.</span>';
+
+                        var dots = speechTextEl.querySelectorAll('.proc-dot');
+                        var dotCycle = 0;
+                        var dotInterval = setInterval(function() {
+                            var phase = dotCycle % 4;
+                            dots.forEach(function(d, i) {
+                                d.style.opacity = (i < phase) ? '1' : '0';
+                            });
+                            dotCycle++;
+                        }, 280);
+
+                        // After 3 seconds stop dots and show final result
+                        speechTimers.push(setTimeout(function() {
+                            clearInterval(dotInterval);
+                            var simBox = document.querySelector('.speech-sim-box');
+                            speechTextEl.innerHTML =
+                                '<span class="speech-result-fadein">当我坐在窗边，看着外面渐渐亮起的城市灯光时，我在想，或许每一个平凡的日子里，都藏着值得被珍惜的小奇迹。</span>';
+                            if (simBox) simBox.classList.add('speech-sim-box--done');
+                        }, 3000));
+                    }, 1000)); // end of 1s delay
+                }, elapsed + 200));
+            }
+
+            function resetSpeechSim() {
+                speechTimers.forEach(function(t) { clearTimeout(t); });
+                speechTimers = [];
+                speechStarted = false;
+                speechTextEl.innerHTML = '';
+                var simBox = document.querySelector('.speech-sim-box');
+                if (simBox) simBox.classList.remove('speech-sim-box--done');
+            }
+
+            // Hook into typing start: override the startTime setter
+            var origStartTime = null;
+            var _onTypingStart = startSpeechSim;
+
+            // Patch: wrap the compositionend and input handlers to trigger speech sim
+            var origInput = inputEl.oninput;
+            function triggerSpeechOnStart() {
+                if (!speechStarted) startSpeechSim();
+            }
+
+            // Listen for the first real keystroke
+            inputEl.addEventListener('compositionend', triggerSpeechOnStart, true);
+            inputEl.addEventListener('input', function() {
+                if (!composing) triggerSpeechOnStart();
+            }, true);
+        })();
     })();
     </script>
     <style>
