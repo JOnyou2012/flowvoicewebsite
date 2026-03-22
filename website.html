@@ -1201,12 +1201,8 @@
         .speech-sim-speed i {
             color: var(--brand-purple);
         }
-        .proc-dot {
-            font-size: clamp(28px, 4vw, 40px);
-            font-weight: 700;
-            color: var(--brand-violet);
-            opacity: 0;
-            transition: opacity 200ms ease;
+        .speech-sim-text span {
+            transition: opacity 400ms ease;
         }
     </style>
 </head>
@@ -2163,38 +2159,30 @@
                     }
                 });
 
-                // Mark done after all chars, then show processing dots for 3s
+                // Mark done after all chars, then fade out filler → text → show final
                 speechTimers.push(setTimeout(function() {
                     var oldCursor = speechTextEl.querySelector('.speech-sim-cursor');
                     if (oldCursor) oldCursor.remove();
-                    // 1 second pause, then start the dots
+
+                    // Step 1: after 600ms, fade out red filler spans
                     speechTimers.push(setTimeout(function() {
+                        var fillers = speechTextEl.querySelectorAll('.filler');
+                        fillers.forEach(function(f) { f.style.opacity = '0'; });
 
-                        // Replace content with animated dots
-                        speechTextEl.innerHTML =
-                            '<span class="proc-dot" id="pd1">.</span>' +
-                            '<span class="proc-dot" id="pd2">.</span>' +
-                            '<span class="proc-dot" id="pd3">.</span>';
-
-                        var dots = speechTextEl.querySelectorAll('.proc-dot');
-                        var dotCycle = 0;
-                        var dotInterval = setInterval(function() {
-                            var phase = dotCycle % 4;
-                            dots.forEach(function(d, i) {
-                                d.style.opacity = (i < phase) ? '1' : '0';
-                            });
-                            dotCycle++;
-                        }, 280);
-
-                        // After 3 seconds stop dots and show final result
+                        // Step 2: after 450ms, fade out all remaining spans
                         speechTimers.push(setTimeout(function() {
-                            clearInterval(dotInterval);
-                            var simBox = document.querySelector('.speech-sim-box');
-                            speechTextEl.innerHTML =
-                                '<span class="speech-result-fadein">当我坐在窗边，看着外面渐渐亮起的城市灯光时，我在想，或许每一个平凡的日子里，都藏着值得被珍惜的小奇迹。</span>';
-                            if (simBox) simBox.classList.add('speech-sim-box--done');
-                        }, 3000));
-                    }, 1000)); // end of 1s delay
+                            var allSpans = speechTextEl.querySelectorAll('span');
+                            allSpans.forEach(function(s) { s.style.opacity = '0'; });
+
+                            // Step 3: after 450ms, switch gradient + fade in final text
+                            speechTimers.push(setTimeout(function() {
+                                var simBox = document.querySelector('.speech-sim-box');
+                                speechTextEl.innerHTML =
+                                    '<span class="speech-result-fadein">当我倚在窗边，看着城市的灯光一盏盏在夜色中亮起，街道被微风轻轻拂过，远处传来模糊的人声与车鸣。我忽然想到，也许每一个看似平凡的日子里，都藏着细小却真挚的光亮，那些被忽略的笑容、未说出口的温柔，都是值得我们停下脚步、用心去珍惜的小奇迹。</span>';
+                                if (simBox) simBox.classList.add('speech-sim-box--done');
+                            }, 450));
+                        }, 450));
+                    }, 600));
                 }, elapsed + 200));
             }
 
