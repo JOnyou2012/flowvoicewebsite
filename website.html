@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>流声 FlowVoice</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="nav.css">
     <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         /* === Reset & Base === */
@@ -57,10 +58,10 @@
 
         /* === Typography === */
         .text-display-hero {
-            font-size: clamp(64px, 12vw, 160px);
+            font-size: clamp(104px, 28vw, 320px);
             font-weight: 700;
-            line-height: 1.0;
-            letter-spacing: -0.04em;
+            line-height: 0.95;
+            letter-spacing: -0.045em;
         }
 
         .text-display-large {
@@ -120,88 +121,6 @@
             background-clip: text;
         }
 
-        /* === Navigation === */
-        .nav-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            height: 48px;
-            background: rgba(251, 251, 253, 0.8);
-            backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-            transition: background-color var(--motion-base) var(--ease-standard),
-                        box-shadow var(--motion-base) var(--ease-standard);
-        }
-        .nav-bar.nav-dark {
-            background: rgba(22, 22, 23, 0.8);
-            border-bottom-color: rgba(255,255,255,0.08);
-        }
-        .nav-inner {
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 0 22px;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .nav-logo img { height: 20px; filter: brightness(0); }
-        .nav-dark .nav-logo img { filter: brightness(0) invert(1); }
-        .nav-links { display: flex; align-items: center; gap: 28px; }
-        .nav-links a {
-            font-size: 12px;
-            color: var(--text-secondary);
-            transition: color var(--motion-fast) ease;
-        }
-        .nav-links a:hover { color: var(--text-primary); }
-        .nav-dark .nav-links a { color: rgba(255,255,255,0.65); }
-        .nav-dark .nav-links a:hover { color: #fff; }
-        .nav-cta {
-            font-size: 12px;
-            padding: 6px 16px;
-            border-radius: 980px;
-            background: var(--brand-violet);
-            color: #fff;
-            font-weight: 500;
-            transition: background var(--motion-fast) ease;
-        }
-        .nav-cta:hover { background: #4f46e5; }
-        .nav-mobile-toggle {
-            display: none;
-            background: none;
-            color: var(--text-secondary);
-            font-size: 18px;
-            padding: 8px;
-        }
-        .nav-dark .nav-mobile-toggle { color: rgba(255,255,255,0.65); }
-        .nav-mobile-menu {
-            display: none;
-            position: absolute;
-            top: 48px;
-            left: 0;
-            right: 0;
-            background: rgba(251, 251, 253, 0.98);
-            backdrop-filter: saturate(180%) blur(20px);
-            padding: 16px 22px;
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-        }
-        .nav-mobile-menu.show { display: block; }
-        .nav-mobile-menu a {
-            display: block;
-            padding: 12px 0;
-            font-size: 15px;
-            color: var(--text-secondary);
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-        }
-
-        @media (max-width: 767px) {
-            .nav-links { display: none; }
-            .nav-mobile-toggle { display: block; }
-        }
-
         /* === Hero Section === */
         .hero {
             position: relative;
@@ -231,18 +150,14 @@
             0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
             50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
         }
-        .hero-content { position: relative; z-index: 2; max-width: 900px; }
-        .hero-tagline {
-            font-size: clamp(14px, 1.5vw, 18px);
-            font-weight: 500;
-            color: var(--brand-purple);
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-        }
-        .hero-subtitle {
-            margin-top: 24px;
-            margin-bottom: 40px;
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: min(100%, 1100px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(32px, 6vw, 64px);
         }
         .hero-cta {
             display: inline-flex;
@@ -1208,41 +1123,16 @@
 </head>
 <body>
 
-    <!-- ===== Navigation ===== -->
-    <nav id="nav" class="nav-bar">
-        <div class="nav-inner">
-            <a href="#" class="nav-logo">
-                <img src="flowvoicedark.png" alt="FlowVoice 流声" style="height: 18px;">
-            </a>
-            <div class="nav-links">
-                <a href="#features">功能</a>
-                <a href="#scenarios">场景</a>
-                <a href="#privacy">隐私</a>
-                <a href="#" class="nav-cta">下载</a>
-            </div>
-            <button class="nav-mobile-toggle" id="mobileToggle" aria-label="菜单">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-        </div>
-        <div id="mobileMenu" class="nav-mobile-menu">
-            <a href="#features">功能</a>
-            <a href="#scenarios">场景</a>
-            <a href="#privacy">隐私</a>
-            <a href="#cta">下载</a>
-        </div>
-    </nav>
+    <div id="site-nav"></div>
+    <script src="nav-include.js"></script>
 
     <!-- ===== Hero ===== -->
     <section class="hero" id="hero">
         <div class="hero-glow"></div>
         <div class="hero-content">
-            <p class="hero-tagline hero-reveal">专为 Mac 打造</p>
-            <h1 class="text-display-hero text-gradient-brand hero-reveal" style="margin-bottom: 0;">
+            <h1 class="text-display-hero text-gradient-brand hero-reveal">
                 流声
             </h1>
-            <p class="text-body-large hero-subtitle hero-reveal" style="max-width: 640px; margin-left: auto; margin-right: auto;">
-                下一代中文语音输入法。全局唤醒，精准拾音，AI 智能润色，让您的思绪瞬间凝练为完美文字。
-            </p>
             <div class="hero-reveal">
                 <a href="#cta" class="hero-cta">
                     <i class="fa-brands fa-apple" style="font-size: 22px;"></i>
@@ -1278,7 +1168,6 @@
     <!-- ===== "All-new powers" Dark Section ===== -->
     <section class="section-dark" id="features">
         <div class="section-inner">
-            <p class="text-body-large mb-20" data-scroll="up" style="color: rgba(255,255,255,0.5);">AI 智能润色</p>
             <h2 class="text-display-large text-gradient-white mb-40" data-scroll="up" data-scroll-delay="100">
                 出口成章。<br>妙笔生花。
             </h2>
@@ -1371,19 +1260,15 @@
                 <!-- Corner Overlays -->
                 <div class="mac-overlay" style="top: 5%; left: 3%;">
                     <h3>智能润色 · 出口成章</h3>
-                    <p>支持多风格语音转文字，AI 实时润色，让每句话都恰如其分。</p>
                 </div>
                 <div class="mac-overlay" style="bottom: 18%; left: 3%;">
                     <h3>全局唤醒，随叫随到</h3>
-                    <p>无论您身处哪个应用、哪个界面，只需长按快捷键即可随时开启。流声在底层静谧运行，绝不打断您的工作流。</p>
                 </div>
                 <div class="mac-overlay" style="top: 5%; right: 3%;">
                     <h3>焦点所至，文字即达</h3>
-                    <p>光标所在，文字即达。流声将润色后的文字精准送达光标处，让您彻底告别复制粘贴的繁琐。</p>
                 </div>
                 <div class="mac-overlay" style="bottom: 18%; right: 3%;">
                     <h3>思绪流转成文</h3>
-                    <p>无需顾虑语气词、停顿或逻辑跳跃。本地大模型在毫秒间洞悉您所想，自动剔除冗余，让思绪如流水般自然注入文档。</p>
                 </div>
             </div>
         </section>
@@ -1392,7 +1277,6 @@
     <!-- ===== Chinese Typing Test ===== -->
     <section class="typing-test-section" id="typing-test">
         <div class="typing-test-container">
-            <p class="text-body-large mb-20" data-scroll="up" style="color: var(--text-secondary);">速度对比</p>
             <h2 class="text-display-section mb-60" data-scroll="up" data-scroll-delay="100">
                 开口即达，<br><span class="text-gradient-brand">快过键盘。</span>
             </h2>
@@ -1450,7 +1334,6 @@
     <!-- ===== Feature Cards (White Section) ===== -->
     <section class="section-white" id="workflow">
         <div class="section-inner">
-            <p class="text-body-large mb-20" data-scroll="up" style="color: var(--text-secondary);">无缝工作流</p>
             <h2 class="text-display-section mb-60" data-scroll="up" data-scroll-delay="100">
                 从未如此<br><span class="text-gradient-brand">流畅。</span>
             </h2>
@@ -1461,21 +1344,18 @@
                         <i class="fa-solid fa-wand-magic-sparkles" style="color: #3b82f6;"></i>
                     </div>
                     <h3>多风格表达</h3>
-                    <p>提供商务、正式、日常等多种预设风格，亦可自定义专属语气，让您的表达恰如其分。</p>
                 </div>
                 <div class="feature-card" data-scroll="up" data-scroll-delay="150">
                     <div class="feature-icon" style="background: rgba(154,92,249,0.12);">
                         <i class="fa-solid fa-language" style="color: #9A5CF9;"></i>
                     </div>
                     <h3>口语优化</h3>
-                    <p>自动过滤"嗯"、"啊"等语气词，纠正语法错误，将口述内容转化为条理清晰的书面文字。</p>
                 </div>
                 <div class="feature-card" data-scroll="up" data-scroll-delay="300">
                     <div class="feature-icon" style="background: rgba(52,199,89,0.12);">
                         <i class="fa-solid fa-bolt" style="color: #34c759;"></i>
                     </div>
                     <h3>本地离线模型</h3>
-                    <p>内置高性能离线语音识别，响应极速，且彻底保障您的隐私安全。</p>
                 </div>
             </div>
         </div>
@@ -1488,37 +1368,31 @@
 
             <!-- Slide 1: Writing -->
             <div class="scenario-slide scenario-active" data-scenario="0">
-                <p class="text-body">场景一</p>
                 <h2 class="text-display-section">
                     写作<br><span class="text-gradient-white">创作。</span>
                 </h2>
                 <div class="scenario-card">
                     <h3>文思泉涌，落笔成章</h3>
-                    <p>无论是撰写报告、回复邮件还是创作文章，只需开口说出想法，流声即刻帮您整理成流畅的书面表达。告别键盘束缚，让灵感自由流淌。</p>
                 </div>
             </div>
 
             <!-- Slide 2: Coding -->
             <div class="scenario-slide" data-scenario="1">
-                <p class="text-body">场景二</p>
                 <h2 class="text-display-section">
                     编程<br><span class="text-gradient-white">开发。</span>
                 </h2>
                 <div class="scenario-card">
                     <h3>口述逻辑，代码自成</h3>
-                    <p>无需打字，只需说出你的想法与逻辑，流声将语音实时转写并辅助生成代码注释、文档与结构。让编程思路更流畅，专注于创造而非输入。</p>
                 </div>
             </div>
 
             <!-- Slide 3: Creative -->
             <div class="scenario-slide" data-scenario="2">
-                <p class="text-body">场景三</p>
                 <h2 class="text-display-section">
                     灵感<br><span class="text-gradient-white">捕捉。</span>
                 </h2>
                 <div class="scenario-card">
                     <h3>一闪而过的灵感，再不错过</h3>
-                    <p>散步时的突发奇想、临睡前的绝妙创意——只需对着 Mac 说出来，流声会帮你捕捉、润色并保存。思维的火花，一个不落。</p>
                 </div>
             </div>
 
@@ -1534,7 +1408,6 @@
     <!-- ===== Utterance River (Marquee) ===== -->
     <div class="utterance-river">
         <div class="utterance-heading">
-            <p class="text-body" data-scroll="up" style="color: rgba(255,255,255,0.5); margin-bottom: 16px;">语音指令</p>
             <h2 class="text-display-sub text-gradient-brand" data-scroll="up" data-scroll-delay="100">
                 开口即达，千言万语
             </h2>
@@ -1585,7 +1458,6 @@
             <div style="width: 80px; height: 80px; border-radius: 24px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 40px;" data-scroll="up">
                 <i class="fa-solid fa-lock" style="font-size: 32px; color: rgba(255,255,255,0.8);"></i>
             </div>
-            <p class="text-body-large mb-20" data-scroll="up" data-scroll-delay="100" style="color: rgba(255,255,255,0.5);">最强隐私保护</p>
             <h2 class="text-display-section mb-40" data-scroll="up" data-scroll-delay="200" style="color: #fff;">
                 您的声音，<br>只属于您。
             </h2>
@@ -1599,12 +1471,9 @@
     <section class="cta-section" id="cta">
         <div class="cta-glow"></div>
         <div style="position: relative; z-index: 2;">
-            <h2 class="text-display-large mb-20" data-scroll="up" style="text-align: center;">
+            <h2 class="text-display-large mb-40" data-scroll="up" style="text-align: center;">
                 <span class="text-gradient-brand">释放声音的力量。</span>
             </h2>
-            <p class="text-body-large mb-40" data-scroll="up" data-scroll-delay="100" style="max-width: 500px; margin-left: auto; margin-right: auto;">
-                体验纯净、私密、高效的桌面级 AI 语音输入。
-            </p>
             <div data-scroll="up" data-scroll-delay="200">
                 <a href="#" class="cta-btn">
                     <i class="fa-brands fa-apple" style="font-size: 24px;"></i>
@@ -1686,18 +1555,6 @@
         var isMobile = window.innerWidth < 768;
 
         function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
-
-        /* === Mobile menu toggle === */
-        var mobileToggle = document.getElementById('mobileToggle');
-        var mobileMenu = document.getElementById('mobileMenu');
-        if (mobileToggle && mobileMenu) {
-            mobileToggle.addEventListener('click', function() {
-                mobileMenu.classList.toggle('show');
-            });
-            mobileMenu.querySelectorAll('a').forEach(function(a) {
-                a.addEventListener('click', function() { mobileMenu.classList.remove('show'); });
-            });
-        }
 
         /* === Hero cinematic entrance === */
         var heroItems = document.querySelectorAll('.hero .hero-reveal');
@@ -1866,7 +1723,7 @@
 
         /* === Chinese Typing Test === */
         (function initTypingTest() {
-            var testText = '我坐在窗边，看着外面的灯一点点亮起来，然后我想，也许每天都有一些普通的事情挺不错的。';
+            var testText = '我靠在窗边，看着灯亮起来，风吹着，街上有点声音。我想，也许平凡的日子也有点小东西吧。';
             var chars = testText.split('');
             var promptEl = document.getElementById('typingPrompt');
             var inputEl = document.getElementById('typingInput');
@@ -2097,19 +1954,19 @@
 
             // Build the script: original text with fillers inserted at natural pause points
             var speechScript = [
-                { text: '我坐在窗边，', filler: false },
+                { text: '我靠在窗边，', filler: false },
                 { text: '嗯…', filler: true },
-                { text: '看着外面的灯', filler: false },
+                { text: '看着灯亮起来，', filler: false },
                 { text: '呃…', filler: true },
-                { text: '一点点亮起来，', filler: false },
+                { text: '风吹着，', filler: false },
                 { text: '嗯…', filler: true },
-                { text: '然后我想，', filler: false },
+                { text: '街上有点声音。', filler: false },
                 { text: '呃…就是…', filler: true },
-                { text: '也许每天都有', filler: false },
+                { text: '我想，', filler: false },
                 { text: '嗯…', filler: true },
-                { text: '一些普通的事情', filler: false },
+                { text: '也许平凡的日子', filler: false },
                 { text: '呃…', filler: true },
-                { text: '挺不错的。', filler: false }
+                { text: '也有点小东西吧。', filler: false }
             ];
 
             // Calculate total real chars (non-filler) for timing

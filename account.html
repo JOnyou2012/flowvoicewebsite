@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帐号中心 · FlowVoice</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="nav.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        a { text-decoration: none; color: inherit; }
+
+        .account-wrap {
+            min-height: calc(100vh - var(--nav-height));
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 20px 80px;
+        }
+
+        .account-card {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .account-card h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+        }
+
+        .account-section {
+            margin-bottom: 28px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e5e5e7;
+        }
+
+        .account-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .account-section h2 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+
+        .account-row {
+            margin-bottom: 14px;
+        }
+
+        .account-row label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .account-row .value {
+            font-size: 15px;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+
+        .account-field {
+            margin-bottom: 14px;
+        }
+
+        .account-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .account-inline-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .account-inline-row input[readonly] {
+            flex: 1;
+            min-width: 0;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            border: 1px solid #d2d2d7;
+            border-radius: 10px;
+            background: #f5f5f7;
+            color: var(--text-primary);
+            cursor: default;
+        }
+
+        .account-pen-link {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            color: #86868b;
+            transition: color 0.15s ease, background 0.15s ease;
+        }
+
+        .account-pen-link:hover {
+            color: #1d1d1f;
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .account-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            color: #fff;
+            background: #1d1d1f;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 200ms ease;
+        }
+
+        .account-btn:hover { background: #333; }
+        .account-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .account-btn-secondary {
+            background: #fff;
+            color: var(--text-primary);
+            border: 1px solid #d2d2d7;
+        }
+
+        .account-btn-secondary:hover { background: #f5f5f7; }
+
+        .account-loading {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body class="with-fixed-nav">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <div id="site-nav"></div>
+    <script src="nav-include.js"></script>
+
+    <div class="account-wrap">
+        <div class="account-card" id="accountCard">
+            <p class="account-loading" id="loadingMsg">加载中…</p>
+            <div id="accountContent" style="display: none;">
+                <h1>帐号中心</h1>
+
+                <div class="account-section">
+                    <h2>个人资料</h2>
+                    <div class="account-row">
+                        <label>邮箱</label>
+                        <div class="value" id="emailVal"></div>
+                    </div>
+                    <div class="account-row">
+                        <label>方案</label>
+                        <div class="value" id="planVal">—</div>
+                    </div>
+                    <div class="account-field">
+                        <label for="nameDisplay">显示名称</label>
+                        <div class="account-inline-row">
+                            <input type="text" id="nameDisplay" readonly tabindex="-1" placeholder="—" aria-readonly="true">
+                            <a href="account-name.html" class="account-pen-link" title="修改显示名称" aria-label="修改显示名称">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="account-field">
+                        <label for="pwdMask">密码</label>
+                        <div class="account-inline-row">
+                            <input type="text" id="pwdMask" readonly tabindex="-1" value="••••••••" aria-readonly="true" style="letter-spacing: 0.15em;">
+                            <a href="account-password.html" class="account-pen-link" title="修改密码" aria-label="修改密码">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="account-btn account-btn-secondary" id="homeBtn">返回首页</button>
+                <button type="button" class="account-btn" id="signOutBtn">退出登录</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        'use strict';
+        var loadingMsg = document.getElementById('loadingMsg');
+        var accountContent = document.getElementById('accountContent');
+        var emailVal = document.getElementById('emailVal');
+        var planVal = document.getElementById('planVal');
+        var nameDisplay = document.getElementById('nameDisplay');
+        var signOutBtn = document.getElementById('signOutBtn');
+        var homeBtn = document.getElementById('homeBtn');
+
+        function showAccount(user) {
+            loadingMsg.style.display = 'none';
+            accountContent.style.display = 'block';
+            emailVal.textContent = user.email || '—';
+            _supabase
+                .from('profiles')
+                .select('display_name, plan_name')
+                .eq('id', user.id)
+                .maybeSingle()
+                .then(function (res) {
+                    if (res.data) {
+                        if (res.data.display_name) nameDisplay.value = res.data.display_name;
+                        if (res.data.plan_name) planVal.textContent = res.data.plan_name;
+                    }
+                });
+        }
+
+        _supabase.auth.getSession().then(function (result) {
+            if (result.error || !result.data.session) {
+                window.location.href = 'login.html';
+                return;
+            }
+            showAccount(result.data.session.user);
+        });
+
+        signOutBtn.addEventListener('click', function () {
+            signOutBtn.disabled = true;
+            _supabase.auth.signOut().then(function () {
+                window.location.href = 'login.html';
+            });
+        });
+
+        homeBtn.addEventListener('click', function () {
+            window.location.href = 'website.html';
+        });
+    })();
+    </script>
+</body>
+</html>

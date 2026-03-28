@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 · FlowVoice</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="nav.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        a { text-decoration: none; color: inherit; }
+
+        .auth-wrapper {
+            min-height: calc(100vh - var(--nav-height));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-card h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 28px;
+        }
+
+        .auth-field {
+            margin-bottom: 16px;
+        }
+
+        .auth-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .auth-field input {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            border: 1px solid #d2d2d7;
+            border-radius: 10px;
+            background: #fff;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 200ms ease;
+        }
+
+        .auth-field input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            color: #fff;
+            background: #1d1d1f;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 200ms ease;
+            margin-top: 8px;
+        }
+
+        .auth-btn:hover { background: #333; }
+        .auth-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .auth-error {
+            display: none;
+            margin-top: 16px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #dc2626;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+        }
+
+        .auth-error.visible { display: block; }
+
+        .auth-footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .auth-footer a {
+            color: #6366f1;
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body class="with-fixed-nav">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <div id="site-nav"></div>
+    <script src="nav-include.js"></script>
+
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <h1>登录</h1>
+
+            <form id="loginForm">
+                <div class="auth-field">
+                    <label for="email">邮箱</label>
+                    <input type="email" id="email" autocomplete="email" required placeholder="you@example.com">
+                </div>
+                <div class="auth-field">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" autocomplete="current-password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="auth-btn" id="submitBtn">登录</button>
+            </form>
+
+            <div class="auth-error" id="errorMsg"></div>
+
+            <p class="auth-footer">
+                No account? <a href="signup.html">Sign up</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        'use strict';
+        var form = document.getElementById('loginForm');
+        var emailInput = document.getElementById('email');
+        var passwordInput = document.getElementById('password');
+        var submitBtn = document.getElementById('submitBtn');
+        var errorMsg = document.getElementById('errorMsg');
+
+        function showError(msg) {
+            errorMsg.textContent = msg;
+            errorMsg.classList.add('visible');
+        }
+        function hideError() {
+            errorMsg.classList.remove('visible');
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            hideError();
+            submitBtn.disabled = true;
+            submitBtn.textContent = '登录中…';
+
+            _supabase.auth.signInWithPassword({
+                email: emailInput.value.trim(),
+                password: passwordInput.value
+            }).then(function (result) {
+                if (result.error) {
+                    showError(result.error.message);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '登录';
+                    return;
+                }
+                window.location.href = 'website.html';
+            }).catch(function () {
+                showError('网络错误，请稍后再试');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '登录';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

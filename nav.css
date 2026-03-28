@@ -1,0 +1,92 @@
+/* Tokens used by the top bar (pages with a full :root may override these) */
+:root {
+    --text-primary: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --nav-height: 56px;
+    /* Render tall, clip top/bottom so the logo text isn’t tiny (PNG has lots of vertical padding) */
+    --nav-logo-render-height: 104px;
+    --motion-base: 320ms;
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* === Navigation === */
+.nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: var(--nav-height);
+    background: rgba(251, 251, 253, 0.8);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    transition: background-color var(--motion-base) var(--ease-standard),
+                box-shadow var(--motion-base) var(--ease-standard);
+}
+.nav-bar.nav-dark {
+    background: rgba(22, 22, 23, 0.8);
+    border-bottom-color: rgba(255,255,255,0.08);
+}
+.nav-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 22px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+.nav-auth-link {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #424245;
+    text-decoration: none;
+    transition: color var(--motion-base) var(--ease-standard);
+}
+.nav-auth-link:hover {
+    color: var(--text-primary);
+}
+.nav-dark .nav-auth-link {
+    color: rgba(255, 255, 255, 0.55);
+}
+.nav-dark .nav-auth-link:hover {
+    color: #fff;
+}
+.nav-logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    line-height: 0;
+    overflow: hidden;
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: calc(100% - 5.5rem);
+    z-index: 1;
+}
+.nav-logo img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: var(--nav-logo-render-height);
+    height: auto;
+    object-fit: contain;
+    object-position: left center;
+    filter: brightness(0);
+}
+.nav-dark .nav-logo img { filter: brightness(0) invert(1); }
+
+/* Secondary pages: offset content below fixed nav */
+body.with-fixed-nav {
+    margin: 0;
+    padding-top: var(--nav-height);
+    font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text-primary);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+}

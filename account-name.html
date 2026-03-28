@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修改显示名称 · FlowVoice</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="nav.css">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        a { text-decoration: none; color: inherit; }
+
+        .account-wrap {
+            min-height: calc(100vh - var(--nav-height));
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 20px 80px;
+        }
+
+        .account-card {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .account-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .account-back:hover { color: var(--text-primary); }
+
+        .account-card h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+        }
+
+        .account-field {
+            margin-bottom: 14px;
+        }
+
+        .account-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .account-field input {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-family: inherit;
+            border: 1px solid #d2d2d7;
+            border-radius: 10px;
+            background: #fff;
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 200ms ease;
+        }
+
+        .account-field input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+
+        .account-btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            color: #fff;
+            background: #1d1d1f;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 200ms ease;
+        }
+
+        .account-btn:hover { background: #333; }
+        .account-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .account-btn-secondary {
+            background: #fff;
+            color: var(--text-primary);
+            border: 1px solid #d2d2d7;
+        }
+
+        .account-btn-secondary:hover { background: #f5f5f7; }
+
+        .account-msg {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 14px;
+            font-size: 13px;
+            border-radius: 10px;
+        }
+
+        .account-msg.error {
+            color: #dc2626;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .account-msg.success {
+            color: #16a34a;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .account-msg.visible { display: block; }
+
+        .account-loading {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body class="with-fixed-nav">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <div id="site-nav"></div>
+    <script src="nav-include.js"></script>
+
+    <div class="account-wrap">
+        <div class="account-card" id="accountCard">
+            <p class="account-loading" id="loadingMsg">加载中…</p>
+            <div id="pageContent" style="display: none;">
+                <a href="account.html" class="account-back">← 返回帐号中心</a>
+                <h1>修改显示名称</h1>
+
+                <div class="account-field">
+                    <label for="nameInput">显示名称</label>
+                    <input type="text" id="nameInput" placeholder="你的名字" autocomplete="nickname">
+                </div>
+                <button type="button" class="account-btn account-btn-secondary" id="saveNameBtn">保存名称</button>
+                <div class="account-msg" id="nameMsg"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        'use strict';
+        var loadingMsg = document.getElementById('loadingMsg');
+        var pageContent = document.getElementById('pageContent');
+        var nameInput = document.getElementById('nameInput');
+        var saveNameBtn = document.getElementById('saveNameBtn');
+        var nameMsg = document.getElementById('nameMsg');
+
+        var currentUser = null;
+
+        function showMsg(el, text, type) {
+            el.textContent = text;
+            el.className = 'account-msg visible ' + type;
+        }
+
+        function hideMsg(el) {
+            el.className = 'account-msg';
+        }
+
+        function showPage(user) {
+            currentUser = user;
+            loadingMsg.style.display = 'none';
+            pageContent.style.display = 'block';
+            _supabase
+                .from('profiles')
+                .select('display_name')
+                .eq('id', user.id)
+                .maybeSingle()
+                .then(function (res) {
+                    if (res.data && res.data.display_name) nameInput.value = res.data.display_name;
+                });
+        }
+
+        _supabase.auth.getSession().then(function (result) {
+            if (result.error || !result.data.session) {
+                window.location.href = 'login.html';
+                return;
+            }
+            showPage(result.data.session.user);
+        });
+
+        saveNameBtn.addEventListener('click', function () {
+            hideMsg(nameMsg);
+            var name = nameInput.value.trim();
+            if (!name) {
+                showMsg(nameMsg, '名称不能为空', 'error');
+                return;
+            }
+            if (!currentUser) return;
+            saveNameBtn.disabled = true;
+            saveNameBtn.textContent = '保存中…';
+            _supabase
+                .from('profiles')
+                .update({ display_name: name })
+                .eq('id', currentUser.id)
+                .then(function (res) {
+                    saveNameBtn.disabled = false;
+                    saveNameBtn.textContent = '保存名称';
+                    if (res.error) {
+                        showMsg(nameMsg, res.error.message, 'error');
+                    } else {
+                        _supabase.auth.signOut().then(function () {
+                            window.location.href = 'login.html';
+                        });
+                    }
+                });
+        });
+    })();
+    </script>
+</body>
+</html>
