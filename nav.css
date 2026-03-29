@@ -38,22 +38,32 @@
     justify-content: space-between;
     gap: 16px;
 }
-.nav-auth-link {
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
     position: relative;
     z-index: 2;
-    flex-shrink: 0;
+}
+
+.nav-download-link,
+.nav-auth-link {
     font-size: 13px;
     font-weight: 600;
     color: #424245;
     text-decoration: none;
     transition: color var(--motion-base) var(--ease-standard);
 }
+.nav-download-link:hover,
 .nav-auth-link:hover {
     color: var(--text-primary);
 }
+.nav-dark .nav-download-link,
 .nav-dark .nav-auth-link {
     color: rgba(255, 255, 255, 0.55);
 }
+.nav-dark .nav-download-link:hover,
 .nav-dark .nav-auth-link:hover {
     color: #fff;
 }

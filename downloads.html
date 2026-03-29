@@ -6,12 +6,156 @@
     <title>下载 · FlowVoice</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="nav.css">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        a { text-decoration: none; color: inherit; }
+
+        .downloads-wrap {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 22px 80px;
+        }
+
+        .downloads-wrap h1 {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 28px;
+            color: var(--text-primary);
+        }
+
+        .platform-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .platform-card {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 20px;
+            padding: 22px 24px;
+            border: 1px solid #d2d2d7;
+            border-radius: 14px;
+            background: #fff;
+        }
+
+        .platform-icon {
+            flex-shrink: 0;
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+        }
+
+        .platform-icon.mac {
+            background: rgba(0, 0, 0, 0.06);
+            color: #1d1d1f;
+        }
+
+        .platform-icon.windows {
+            background: rgba(0, 120, 215, 0.1);
+            color: #0078d4;
+        }
+
+        .platform-body {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .platform-body h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .platform-actions {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .dl-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 148px;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease, opacity 0.2s ease;
+        }
+
+        .dl-btn-primary {
+            background: #1d1d1f;
+            color: #fff;
+        }
+
+        .dl-btn-primary:hover {
+            background: #333;
+        }
+
+        .dl-btn-primary[aria-disabled="true"] {
+            opacity: 0.45;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .dl-btn-secondary {
+            background: #f5f5f7;
+            color: var(--text-primary);
+            border: 1px solid #d2d2d7;
+        }
+
+        .dl-btn-secondary:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body class="with-fixed-nav">
     <div id="site-nav"></div>
     <script src="nav-include.js"></script>
-    <main style="max-width: 980px; margin: 0 auto; padding: 40px 22px;">
-        <h1 style="font-size: clamp(28px, 4vw, 40px); font-weight: 700; letter-spacing: -0.02em;">下载 FlowVoice</h1>
+
+    <main class="downloads-wrap">
+        <h1>下载 FlowVoice</h1>
+
+        <div class="platform-list">
+            <article class="platform-card">
+                <div class="platform-icon mac" aria-hidden="true">
+                    <i class="fa-brands fa-apple"></i>
+                </div>
+                <div class="platform-body">
+                    <h2>macOS</h2>
+                </div>
+                <div class="platform-actions">
+                    <a href="#" class="dl-btn dl-btn-primary" id="downloadMac" aria-disabled="true">下载 Mac 版</a>
+                </div>
+            </article>
+
+            <article class="platform-card">
+                <div class="platform-icon windows" aria-hidden="true">
+                    <i class="fa-brands fa-windows"></i>
+                </div>
+                <div class="platform-body">
+                    <h2>Windows</h2>
+                </div>
+                <div class="platform-actions">
+                    <button type="button" class="dl-btn dl-btn-secondary" disabled>敬请期待</button>
+                </div>
+            </article>
+        </div>
     </main>
 </body>
 </html>
