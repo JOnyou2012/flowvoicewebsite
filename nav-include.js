@@ -49,8 +49,8 @@
         if (!link || typeof _supabase === 'undefined') {
             return Promise.resolve();
         }
-        return _supabase.auth.getSession().then(function (result) {
-            if (result.data && result.data.session) {
+        return _supabase.auth.getUser().then(function (result) {
+            if (result.data && result.data.user) {
                 link.href = 'account.html';
                 link.textContent = '帐号';
             } else {

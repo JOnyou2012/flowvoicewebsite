@@ -33,6 +33,5 @@ TARGET_URL_PATH="${TARGET_FILE// /%20}"
 TARGET_URL="http://localhost:$PORT/$TARGET_URL_PATH?v=$(date +%s)"
 
 echo "Serving $TARGET_FILE on $TARGET_URL"
-(sleep 1 && open "$TARGET_URL") &
 
 exec python3 -m http.server "$PORT"

@@ -120,6 +120,54 @@
         }
 
         .auth-footer a:hover { text-decoration: underline; }
+
+        .auth-step { display: block; }
+        .auth-step.hidden { display: none; }
+
+        .auth-hint {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        .auth-hint strong { color: var(--text-primary); }
+
+        .otp-input {
+            text-align: center;
+            font-size: 22px;
+            letter-spacing: 0.4em;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .auth-row-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .auth-btn-secondary {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: inherit;
+            color: #6366f1;
+            background: transparent;
+            border: 1px solid #d2d2d7;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 200ms ease, border-color 200ms ease;
+        }
+        .auth-btn-secondary:hover:not(:disabled) {
+            background: rgba(99, 102, 241, 0.06);
+            border-color: #6366f1;
+        }
+        .auth-btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body class="with-fixed-nav">
@@ -132,25 +180,42 @@
         <div class="auth-card">
             <h1>创建帐号</h1>
 
-            <form id="signupForm">
-                <div class="auth-field">
-                    <label for="displayName">显示名称</label>
-                    <input type="text" id="displayName" autocomplete="name" required placeholder="你的名字">
-                </div>
-                <div class="auth-field">
-                    <label for="email">邮箱</label>
-                    <input type="email" id="email" autocomplete="email" required placeholder="you@example.com">
-                </div>
-                <div class="auth-field">
-                    <label for="password">密码</label>
-                    <input type="password" id="password" autocomplete="new-password" required placeholder="至少 6 位" minlength="6">
-                </div>
-                <div class="auth-field">
-                    <label for="confirmPassword">确认密码</label>
-                    <input type="password" id="confirmPassword" autocomplete="new-password" required placeholder="再次输入密码">
-                </div>
-                <button type="submit" class="auth-btn" id="submitBtn">注册</button>
-            </form>
+            <div id="stepRegister" class="auth-step">
+                <form id="signupForm">
+                    <div class="auth-field">
+                        <label for="displayName">显示名称</label>
+                        <input type="text" id="displayName" autocomplete="name" required placeholder="你的名字">
+                    </div>
+                    <div class="auth-field">
+                        <label for="email">邮箱</label>
+                        <input type="email" id="email" autocomplete="email" required placeholder="you@example.com">
+                    </div>
+                    <div class="auth-field">
+                        <label for="password">密码</label>
+                        <input type="password" id="password" autocomplete="new-password" required placeholder="至少 6 位" minlength="6">
+                    </div>
+                    <div class="auth-field">
+                        <label for="confirmPassword">确认密码</label>
+                        <input type="password" id="confirmPassword" autocomplete="new-password" required placeholder="再次输入密码">
+                    </div>
+                    <button type="submit" class="auth-btn" id="submitBtn">注册</button>
+                </form>
+            </div>
+
+            <div id="stepOtp" class="auth-step hidden">
+                <p class="auth-hint" id="otpHint">我们已向 <strong id="otpEmailDisplay"></strong> 发送验证码，请在下方输入。</p>
+                <form id="otpForm">
+                    <div class="auth-field">
+                        <label for="otpCode">验证码</label>
+                        <input type="text" id="otpCode" class="otp-input" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="one-time-code" placeholder="000000" required>
+                    </div>
+                    <button type="submit" class="auth-btn" id="otpSubmitBtn">验证并完成注册</button>
+                    <div class="auth-row-btns">
+                        <button type="button" class="auth-btn-secondary" id="resendOtpBtn">重新发送验证码</button>
+                        <button type="button" class="auth-btn-secondary" id="backToRegisterBtn">返回修改邮箱</button>
+                    </div>
+                </form>
+            </div>
 
             <div class="auth-error" id="errorMsg"></div>
             <div class="auth-success" id="successMsg"></div>
@@ -163,13 +228,24 @@
     (function () {
         'use strict';
         var form = document.getElementById('signupForm');
+        var otpForm = document.getElementById('otpForm');
+        var stepRegister = document.getElementById('stepRegister');
+        var stepOtp = document.getElementById('stepOtp');
         var displayNameInput = document.getElementById('displayName');
         var emailInput = document.getElementById('email');
         var passwordInput = document.getElementById('password');
         var confirmInput = document.getElementById('confirmPassword');
         var submitBtn = document.getElementById('submitBtn');
+        var otpCodeInput = document.getElementById('otpCode');
+        var otpSubmitBtn = document.getElementById('otpSubmitBtn');
+        var resendOtpBtn = document.getElementById('resendOtpBtn');
+        var backToRegisterBtn = document.getElementById('backToRegisterBtn');
+        var otpEmailDisplay = document.getElementById('otpEmailDisplay');
         var errorMsg = document.getElementById('errorMsg');
         var successMsg = document.getElementById('successMsg');
+
+        var pendingEmail = '';
+        var pendingDisplayName = '';
 
         function showError(msg) {
             successMsg.classList.remove('visible');
@@ -186,6 +262,44 @@
             successMsg.classList.remove('visible');
         }
 
+        function showOtpStep(email, displayName) {
+            pendingEmail = email;
+            pendingDisplayName = displayName;
+            stepRegister.classList.add('hidden');
+            stepOtp.classList.remove('hidden');
+            otpEmailDisplay.textContent = email;
+            otpCodeInput.value = '';
+            hideMessages();
+            showSuccess('验证码已发送，请查收邮件（含垃圾箱）。');
+            setTimeout(function () { otpCodeInput.focus(); }, 100);
+        }
+
+        function showRegisterStep() {
+            stepOtp.classList.add('hidden');
+            stepRegister.classList.remove('hidden');
+            pendingEmail = '';
+            pendingDisplayName = '';
+            hideMessages();
+        }
+
+        function finishSignupSession(userId, attempt) {
+            attempt = attempt || 1;
+            _supabase.from('profiles')
+                .update({ display_name: pendingDisplayName })
+                .eq('id', userId)
+                .then(function (res) {
+                    if (res.error && attempt < 2) {
+                        setTimeout(function () { finishSignupSession(userId, attempt + 1); }, 600);
+                        return;
+                    }
+                    if (res.error) console.warn('profile update failed:', res.error.message);
+                    window.location.href = 'website.html';
+                })
+                .catch(function () {
+                    window.location.href = 'website.html';
+                });
+        }
+
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             hideMessages();
@@ -199,12 +313,14 @@
             submitBtn.textContent = '注册中…';
 
             var displayName = displayNameInput.value.trim();
+            var email = emailInput.value.trim();
 
             _supabase.auth.signUp({
-                email: emailInput.value.trim(),
+                email: email,
                 password: passwordInput.value,
                 options: {
-                    data: { display_name: displayName }
+                    data: { display_name: displayName },
+                    emailRedirectTo: window.location.origin + window.location.pathname
                 }
             }).then(function (result) {
                 if (result.error) {
@@ -216,21 +332,103 @@
 
                 var session = result.data.session;
                 if (session) {
-                    _supabase.from('profiles')
-                        .update({ display_name: displayName })
-                        .eq('id', result.data.user.id)
-                        .then(function () {
-                            window.location.href = 'website.html';
-                        });
-                } else {
-                    showSuccess('注册成功！请查看邮箱完成验证，然后返回登录。');
-                    form.style.display = 'none';
+                    pendingDisplayName = displayName;
+                    finishSignupSession(result.data.user.id);
+                    return;
                 }
+
+                showOtpStep(email, displayName);
+                submitBtn.disabled = false;
+                submitBtn.textContent = '注册';
             }).catch(function () {
                 showError('网络错误，请稍后再试');
                 submitBtn.disabled = false;
                 submitBtn.textContent = '注册';
             });
+        });
+
+        otpForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            hideMessages();
+
+            var raw = otpCodeInput.value.replace(/\D/g, '');
+            if (raw.length < 6) {
+                showError('请输入完整的数字验证码');
+                return;
+            }
+
+            otpSubmitBtn.disabled = true;
+            otpSubmitBtn.textContent = '验证中…';
+
+            _supabase.auth.verifyOtp({
+                email: pendingEmail,
+                token: raw,
+                type: 'signup'
+            }).then(function (result) {
+                if (result.error) {
+                    return _supabase.auth.verifyOtp({
+                        email: pendingEmail,
+                        token: raw,
+                        type: 'email'
+                    });
+                }
+                return result;
+            }).then(function (result) {
+                if (result.error) {
+                    showError(result.error.message || '验证码无效或已过期');
+                    otpSubmitBtn.disabled = false;
+                    otpSubmitBtn.textContent = '验证并完成注册';
+                    return;
+                }
+
+                var user = result.data.user;
+                if (user && user.id) {
+                    finishSignupSession(user.id);
+                } else {
+                    showError('验证成功但未获取用户信息，请尝试登录。');
+                    otpSubmitBtn.disabled = false;
+                    otpSubmitBtn.textContent = '验证并完成注册';
+                }
+            }).catch(function () {
+                showError('网络错误，请稍后再试');
+                otpSubmitBtn.disabled = false;
+                otpSubmitBtn.textContent = '验证并完成注册';
+            });
+        });
+
+        resendOtpBtn.addEventListener('click', function () {
+            if (!pendingEmail) return;
+            hideMessages();
+            resendOtpBtn.disabled = true;
+            resendOtpBtn.textContent = '发送中…';
+
+            _supabase.auth.resend({
+                type: 'signup',
+                email: pendingEmail,
+                options: {
+                    emailRedirectTo: window.location.origin + window.location.pathname
+                }
+            }).then(function (result) {
+                resendOtpBtn.disabled = false;
+                resendOtpBtn.textContent = '重新发送验证码';
+                if (result.error) {
+                    showError(result.error.message);
+                    return;
+                }
+                showSuccess('验证码已重新发送。');
+            }).catch(function () {
+                resendOtpBtn.disabled = false;
+                resendOtpBtn.textContent = '重新发送验证码';
+                showError('网络错误，请稍后再试');
+            });
+        });
+
+        backToRegisterBtn.addEventListener('click', function () {
+            showRegisterStep();
+        });
+
+        otpCodeInput.addEventListener('input', function () {
+            otpCodeInput.value = otpCodeInput.value.replace(/\D/g, '').slice(0, 8);
         });
     })();
     </script>

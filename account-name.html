@@ -182,12 +182,12 @@
                 });
         }
 
-        _supabase.auth.getSession().then(function (result) {
-            if (result.error || !result.data.session) {
+        _supabase.auth.getUser().then(function (result) {
+            if (result.error || !result.data.user) {
                 window.location.href = 'login.html';
                 return;
             }
-            showPage(result.data.session.user);
+            showPage(result.data.user);
         });
 
         saveNameBtn.addEventListener('click', function () {
@@ -210,9 +210,8 @@
                     if (res.error) {
                         showMsg(nameMsg, res.error.message, 'error');
                     } else {
-                        _supabase.auth.signOut().then(function () {
-                            window.location.href = 'login.html';
-                        });
+                        showMsg(nameMsg, '名称已更新', 'success');
+                        setTimeout(function () { window.location.href = 'account.html'; }, 800);
                     }
                 });
         });

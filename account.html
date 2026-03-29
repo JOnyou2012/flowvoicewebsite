@@ -220,12 +220,12 @@
                 });
         }
 
-        _supabase.auth.getSession().then(function (result) {
-            if (result.error || !result.data.session) {
+        _supabase.auth.getUser().then(function (result) {
+            if (result.error || !result.data.user) {
                 window.location.href = 'login.html';
                 return;
             }
-            showAccount(result.data.session.user);
+            showAccount(result.data.user);
         });
 
         signOutBtn.addEventListener('click', function () {

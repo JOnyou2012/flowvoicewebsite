@@ -133,6 +133,7 @@
 
             <div class="auth-error" id="errorMsg"></div>
 
+            <p class="auth-footer"><a href="forgot-password.html">忘记密码？</a></p>
             <p class="auth-footer"><a href="signup.html">注册</a></p>
         </div>
     </div>
@@ -146,8 +147,16 @@
         var submitBtn = document.getElementById('submitBtn');
         var errorMsg = document.getElementById('errorMsg');
 
+        var errorMap = {
+            'Invalid login credentials': '邮箱或密码错误',
+            'Email not confirmed': '邮箱尚未验证，请检查收件箱完成验证',
+            'User not found': '该邮箱未注册',
+            'Too many requests': '请求过于频繁，请稍后再试'
+        };
+        function friendlyError(msg) { return errorMap[msg] || msg; }
+
         function showError(msg) {
-            errorMsg.textContent = msg;
+            errorMsg.textContent = friendlyError(msg);
             errorMsg.classList.add('visible');
         }
         function hideError() {

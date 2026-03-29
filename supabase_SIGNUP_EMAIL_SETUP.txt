@@ -1,0 +1,34 @@
+Supabase signup email shows "{{ .Token }}" as plain text (no digits)
+--------------------------------------------------------------------
+
+1) Paste the RIGHT field
+   Dashboard → Authentication → Email templates → "Confirm signup"
+   Put HTML in the MESSAGE / BODY editor only — not the subject line only.
+
+2) Paste the FRAGMENT file into the template BODY
+   Open supabase_email_confirm_signup_FRAGMENT.html and copy ALL of it (table only,
+   no comments). Do not paste supabase_email_confirm_signup.html's outer <html>/<body>
+   wrapper unless your editor explicitly wants full HTML.
+
+3) Typo-proof the placeholder
+   Must be exactly:  {{.Token}}   or   {{ .Token }}
+   Use normal ASCII { and } — not "smart quotes" or Unicode braces.
+   No spaces inside the braces except the optional space before .Token.
+
+4) Broken template = weird emails
+   If the HTML is invalid (e.g. bad URL), Supabase may fall back or behave oddly.
+   Test with a minimal body first:
+   <p>Code: {{.Token}}</p>
+   Send a real signup — if that works, add logo/table back.
+
+5) Dashboard "Preview" may still show "{{.Token}}"
+   The preview does not always substitute variables. Trigger a real signUp and
+   check the inbox.
+
+6) Site URL + logo image
+   Authentication → URL configuration → Site URL must be your live https origin.
+   Logo URL in email is:  {{ .SiteURL }}/images/logo-email.png
+   If that URL is wrong, temporarily remove the <img> line and test again.
+
+7) Auth logs
+   Dashboard → Authentication → Logs (or project logs) for mail/template errors.

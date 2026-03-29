@@ -109,3 +109,22 @@ create trigger profiles_updated_at
     before update on public.profiles
     for each row
     execute function public.touch_updated_at();
+
+
+-- 6. Prevent clients from changing plan_name / organization_id ──
+
+create or replace function public.protect_profile_fields()
+returns trigger
+language plpgsql
+as $$
+begin
+    new.plan_name := old.plan_name;
+    new.organization_id := old.organization_id;
+    return new;
+end;
+$$;
+
+create trigger profiles_protect_fields
+    before update on public.profiles
+    for each row
+    execute function public.protect_profile_fields();
