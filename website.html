@@ -346,6 +346,7 @@
             top: 0;
             height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow: hidden;
@@ -359,6 +360,7 @@
         .mac-grid {
             display: grid;
             grid-template: 1fr / 1fr;
+            aspect-ratio: 16 / 10;
         }
         .mac-screen-area {
             grid-area: 1/1;
@@ -392,6 +394,69 @@
                 position: relative !important;
                 padding: 40px 16px;
             }
+        }
+
+        /* === MacBook Overlay Callouts === */
+        .mac-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 20;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 500ms var(--ease-standard);
+        }
+        .mac-overlay.overlay-visible {
+            opacity: 1;
+        }
+        .mac-callout {
+            position: absolute;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 14px;
+            padding: 14px 18px;
+            max-width: 180px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 400ms var(--ease-emphasis), transform 400ms var(--ease-emphasis);
+        }
+        .overlay-visible .mac-callout {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .overlay-visible .callout-tl { transition-delay: 0ms; }
+        .overlay-visible .callout-tr { transition-delay: 80ms; }
+        .overlay-visible .callout-bl { transition-delay: 160ms; }
+        .overlay-visible .callout-br { transition-delay: 240ms; }
+        .mac-callout h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 3px;
+        }
+        .mac-callout p {
+            font-size: 11px;
+            line-height: 1.4;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        .callout-tl { top: 8%; left: 1%; }
+        .callout-tr { top: 8%; right: 1%; }
+        .callout-bl { bottom: 18%; left: 1%; }
+        .callout-br { bottom: 18%; right: 1%; }
+        @media (max-width: 767px) {
+            .mac-overlay { display: none; }
+        }
+        .mac-demo-disclaimer {
+            margin: 20px auto 0;
+            max-width: 520px;
+            padding: 0 16px;
+            font-size: 11px;
+            line-height: 1.5;
+            color: var(--text-tertiary);
+            text-align: center;
         }
 
         /* === Feature Cards (Apple rounded style) === */
@@ -818,7 +883,41 @@
                     </div>
                     <img src="macbooktransparent.png" alt="MacBook Pro" class="mac-img">
                 </div>
+
+                <!-- Phase 0: Voice App -->
+                <div class="mac-overlay">
+                    <div class="mac-callout callout-tl"><h4>语音识别</h4><p>普通话、英语等多语言支持</p></div>
+                    <div class="mac-callout callout-tr"><h4>风格切换</h4><p>正式、口语等多种表达模式</p></div>
+                    <div class="mac-callout callout-bl"><h4>即刻就绪</h4><p>打开即用，毫秒级响应</p></div>
+                    <div class="mac-callout callout-br"><h4>音量自适应</h4><p>智能降噪，清晰识别</p></div>
+                </div>
+
+                <!-- Phase 1: Document Editor -->
+                <div class="mac-overlay">
+                    <div class="mac-callout callout-tl"><h4>智能写入</h4><p>语音直达任何输入框</p></div>
+                    <div class="mac-callout callout-tr"><h4>自动排版</h4><p>标点分段智能处理</p></div>
+                    <div class="mac-callout callout-bl"><h4>实时转写</h4><p>边说边出字，所见即所得</p></div>
+                    <div class="mac-callout callout-br"><h4>全局可用</h4><p>适配所有 macOS 应用</p></div>
+                </div>
+
+                <!-- Phase 2: AI Processing -->
+                <div class="mac-overlay">
+                    <div class="mac-callout callout-tl"><h4>AI 润色</h4><p>一键优化文字表达</p></div>
+                    <div class="mac-callout callout-tr"><h4>智能纠错</h4><p>自动修正口误与语法</p></div>
+                    <div class="mac-callout callout-bl"><h4>语义不变</h4><p>只改措辞，保留原意</p></div>
+                    <div class="mac-callout callout-br"><h4>多种风格</h4><p>正式、轻松随心切换</p></div>
+                </div>
+
+                <!-- Phase 3: Completed -->
+                <div class="mac-overlay">
+                    <div class="mac-callout callout-tl"><h4>即时完成</h4><p>润色结果秒级呈现</p></div>
+                    <div class="mac-callout callout-tr"><h4>品质可靠</h4><p>AI 精准优化措辞</p></div>
+                    <div class="mac-callout callout-bl"><h4>直接使用</h4><p>一键复制到目标位置</p></div>
+                    <div class="mac-callout callout-br"><h4>反复优化</h4><p>不满意可重新润色</p></div>
+                </div>
+
             </div>
+            <p class="mac-demo-disclaimer">以上界面仅为演示示意，与正式版产品可能有所不同；部分功能仍在开发中。</p>
         </section>
     </div>
 
