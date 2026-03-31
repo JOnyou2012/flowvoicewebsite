@@ -67,6 +67,14 @@
         })
         .then(function (html) {
             mount.innerHTML = html;
+            var navBar = mount.querySelector('.nav-bar');
+            if (navBar) {
+                var onScroll = function () {
+                    navBar.classList.toggle('nav-scrolled', window.scrollY > 10);
+                };
+                window.addEventListener('scroll', onScroll, { passive: true });
+                onScroll();
+            }
             return ensureSupabase().catch(function () {});
         })
         .then(function () {
