@@ -1,0 +1,1 @@
+{"name":"portfolio-flowvoice","compatibility_date":"2026-11-14","assets":{"directory":"./dist"},"routes":[{"pattern":"flowvoice.polqrized.com","custom_domain":true}],"build":{"command":"python build.py"}}
